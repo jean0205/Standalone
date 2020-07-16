@@ -27,8 +27,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>https://raw.githubusercontent.com/jean0205/Standalone/master/Standalone/publish/</InstallUrl>
     <UpdateUrl>https://raw.githubusercontent.com/jean0205/Standalone/master/Standalone/publish/</UpdateUrl>
-    <MinimumRequiredVersion>1.0.0.26</MinimumRequiredVersion>
-    <ApplicationRevision>27</ApplicationRevision>
+    <MinimumRequiredVersion>1.0.0.27</MinimumRequiredVersion>
+    <ApplicationRevision>28</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
