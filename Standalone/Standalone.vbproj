@@ -31,9 +31,9 @@
     <PublisherName>National Insurance Board</PublisherName>
     <SuiteName>Kiosk Project</SuiteName>
     <MinimumRequiredVersion>1.0.0.27</MinimumRequiredVersion>
-    <ApplicationRevision>39</ApplicationRevision>
+    <ApplicationRevision>40</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
+    <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
