@@ -31,7 +31,7 @@
     <PublisherName>National Insurance Board</PublisherName>
     <SuiteName>Kiosk Project</SuiteName>
     <MinimumRequiredVersion>1.0.0.27</MinimumRequiredVersion>
-    <ApplicationRevision>37</ApplicationRevision>
+    <ApplicationRevision>38</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -80,7 +80,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Visualpharm-Office-Space-Touch-screen-kiosk.ico</ApplicationIcon>
@@ -245,26 +245,6 @@
     <None Include="Resources\362-3628895_admission-to-museum-casanova-red-info-png-transparent.png" />
   </ItemGroup>
   <ItemGroup>
-    <PublishFile Include="Kiosk Machine.pdb">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Kiosk Machine.xml">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
     <PublishFile Include="noimages.jpg">
       <Visible>False</Visible>
       <Group>
