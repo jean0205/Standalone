@@ -5,6 +5,7 @@
 
         Me.AcceptButton = ibtnAccept
 
+
     End Sub
     Private Sub ibtnSave_Click(sender As Object, e As EventArgs) Handles ibtnAccept.Click
         Dim employerNo As Integer

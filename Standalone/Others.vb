@@ -11,8 +11,6 @@ Public Class Others
         Dim tokenHandle As New IntPtr(0)
         Dim myimage As Image
         Try
-
-
             'create file name and check if file exist.
             Dim filname As String
 
