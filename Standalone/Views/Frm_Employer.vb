@@ -1,6 +1,7 @@
 ﻿Imports System.Diagnostics.Eventing.Reader
 Imports System.Globalization
 Imports System.Xml
+Imports Microsoft.VisualBasic.CompilerServices
 
 Public Class Frm_Employer
     Dim db As New AccessBD
@@ -94,16 +95,16 @@ Public Class Frm_Employer
                 End Select
                 txtEmployeeAddress.Text = empe.Address + ", " + empe.Twon + " " + parish
                 Try
-                        txtEmployeePhone.Text = String.Format("{0:###-####}", Long.Parse(empe.Phone))
-                    Catch ex As Exception
-                        txtEmployeePhone.Text = String.Empty
-                    End Try
-                    dtpBOB.Value = empe.DateOB
-                    PanelEmployee2.Visible = True
-                    Dim oth As New Others
-                    PictureBox1.Image = oth.GetImage(nisNumber)
-                Else
-                    MessageBox.Show("NIS number does not exist. Please check and try again",
+                    txtEmployeePhone.Text = String.Format("{0:###-####}", Long.Parse(empe.Phone))
+                Catch ex As Exception
+                    txtEmployeePhone.Text = String.Empty
+                End Try
+                dtpBOB.Value = empe.DateOB
+                PanelEmployee2.Visible = True
+                Dim oth As New Others
+                PictureBox1.Image = oth.GetImage(nisNumber)
+            Else
+                MessageBox.Show("NIS number does not exist. Please check and try again",
                                                "Wrong Number!",
                                                     MessageBoxButtons.OK,
                                                        MessageBoxIcon.Information,
@@ -188,7 +189,7 @@ Public Class Frm_Employer
                 If earning > 5000 Then
                     earning = 5000
                 End If
-                If getWeeks() <> GetNumberOfWeeksInMonth(Year, Month) Then
+                If getWeeks() <> GetNumberOfWeeksInMonth(year, month) Then
                     If earning / getWeeks() > 1160 Then
                         earning = 1160 * getWeeks()
                     End If
@@ -479,6 +480,7 @@ Public Class Frm_Employer
         PanelEmployee2.Visible = False
         MonthCalendar1.Visible = False
         GroupBox4.Visible = False
+        chkVoluntary.Checked = False
     End Sub
     Public Function GetNumberOfWeeksInMonth(year As Integer, month As Integer) As Integer
         Return Enumerable.Range(1, DateTime.DaysInMonth(year, month)).
@@ -507,8 +509,8 @@ Public Class Frm_Employer
                 earning = Convert.ToDecimal(txtEarningsWeekly.Text)
             End If
             Dim contribution = calculateConstribution(earning, monthly, weeks, cmbYear.SelectedItem, cmbMonth.SelectedItem)
-            Dim penalties As Decimal = calculatePenalties(contribution, cmbYear.SelectedItem, cmbMonth.SelectedItem)
-            Dim interes As Decimal = calculateInteres(contribution, cmbYear.SelectedItem, cmbMonth.SelectedItem)
+            Dim penalties = calculatePenalties(contribution, cmbYear.SelectedItem, cmbMonth.SelectedItem)
+            Dim interes = calculateInteres(contribution, cmbYear.SelectedItem, cmbMonth.SelectedItem)
             If dgv1.Rows.Count > 0 Then
                 Dim dt = DirectCast(dgv1.DataSource, DataTable)
                 Dim R As DataRow
@@ -772,9 +774,8 @@ Public Class Frm_Employer
             ElseIf Not monthly AndAlso earning > 1160 * weeks Then
                 earning = 1160 * weeks
             End If
-            'empe.DateOB = New DateTime(1960, 7, 27)
-            ' empe.DateOB = New DateTime(2004, 7, 27)
-
+            'empe.DateOB = New DateTime(1960, 7, 2)
+            'empe.DateOB = New DateTime(2004, 7, 16)
             If InPaidMonth60(year, month) Then
                 If monthly Then
                     Return constribWith60(earning, year, month, True)
@@ -829,6 +830,9 @@ Public Class Frm_Employer
                 Exit For
             End If
         Next
+        If empe.DateOB.Day < day Then
+            Return Math.Round(earnings * 1 / 100, 2)
+        End If
         For week As Integer = 1 To GetNumberOfWeeksInMonth(year, month)
             ' Dim x As Integer = DateDiff(DateInterval.Day, New DateTime(year, month, empe.DateOB.Day), New DateTime(year, month, day), FirstDayOfWeek.Monday)
             If chkweek1.Tag = week And chkweek1.Checked Or chkweek2.Tag = week And chkweek2.Checked Or chkweek3.Tag = week And chkweek3.Checked Or
@@ -881,6 +885,11 @@ Public Class Frm_Employer
                 Exit For
             End If
         Next
+        'antes del primer lunes del mes
+        If empe.DateOB.Day < day Then
+            Return Math.Round(earnings * getNisRate(year, month) / 100, 2)
+        End If
+
         For week As Integer = 1 To GetNumberOfWeeksInMonth(year, month)
             ' Dim x As Integer = DateDiff(DateInterval.Day, New DateTime(year, month, empe.DateOB.Day), New DateTime(year, month, day), FirstDayOfWeek.Monday)
 
@@ -971,6 +980,9 @@ Public Class Frm_Employer
                         Exit For
                     End If
                 Next
+                If empe.DateOB.Day < day Then
+
+                End If
                 For week As Integer = 1 To GetNumberOfWeeksInMonth(year, month)
                     If DateDiff(DateInterval.Day, New DateTime(year, month, empe.DateOB.Day), New DateTime(year, month, day), FirstDayOfWeek.Monday) >= 0 Then
                         Return True
@@ -983,7 +995,6 @@ Public Class Frm_Employer
         End If
         Return False
     End Function
-
     Function InPaidMonth16(year As Integer, month As Integer) As Boolean
         If month = empe.DateOB.Month Then
             Dim day = 1
@@ -1022,8 +1033,16 @@ Public Class Frm_Employer
             If payDate.DayOfWeek = DayOfWeek.Sunday Then
                 payDate = payDate.AddDays(1)
             End If
+            If Today > payDate Then
+                payDate = Today
+            End If
             Dim months As Integer = DateDiff(DateInterval.Month, payDate, period)
-            If months < -1 Then
+            If months = -1 Then
+                If period.Day >= payDate.Day Then
+                    months += 1
+                End If
+            End If
+            If months <= -1 Then
                 penalties = contribution * 0.1
             Else
                 penalties = 0.00
@@ -1038,9 +1057,28 @@ Public Class Frm_Employer
             Dim interes As Decimal
             Dim monthNumber As Integer = DateTime.ParseExact(month, "MMMM", CultureInfo.InvariantCulture).Month
             Dim period As Date = New DateTime(year, monthNumber, 14)
-            Dim months As Integer = DateDiff(DateInterval.Month, Today, period)
-            If months < -1 Then
-                interes = contribution * (0.01 * Math.Abs(months + 1))
+            'Dim months As Integer = DateDiff(DateInterval.Month, Today, period)
+            Dim payDate = New DateTime(Now.Year, Now.Month, 14)
+            While db.getHoliday(payDate)
+                payDate = payDate.AddDays(1)
+            End While
+            If payDate.DayOfWeek = DayOfWeek.Saturday Then
+                payDate = payDate.AddDays(2)
+            End If
+            If payDate.DayOfWeek = DayOfWeek.Sunday Then
+                payDate = payDate.AddDays(1)
+            End If
+            If Today > payDate Then
+                payDate = Today
+            End If
+            Dim months As Integer = DateDiff(DateInterval.Month, payDate, period)
+            If months = -1 Then
+                If period.Day >= payDate.Day Then
+                    months += 1
+                End If
+            End If
+            If months <= -1 Then
+                interes = contribution * (0.01 * Math.Abs(months))
             Else
                 interes = 0.00
             End If

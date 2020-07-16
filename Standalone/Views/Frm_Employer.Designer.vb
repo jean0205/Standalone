@@ -861,7 +861,6 @@ Partial Class Frm_Employer
         Me.dgv1.RowHeadersVisible = False
         Me.dgv1.RowHeadersWidth = 50
         Me.dgv1.RowTemplate.Height = 35
-        Me.dgv1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv1.Size = New System.Drawing.Size(1341, 525)
         Me.dgv1.TabIndex = 0
         '
