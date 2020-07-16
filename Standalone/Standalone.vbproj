@@ -27,10 +27,14 @@
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>https://raw.githubusercontent.com/jean0205/Standalone/master/Standalone/publish/</InstallUrl>
     <UpdateUrl>https://raw.githubusercontent.com/jean0205/Standalone/master/Standalone/publish/</UpdateUrl>
+    <ProductName>Kiosk</ProductName>
+    <PublisherName>National Insurance Board</PublisherName>
+    <SuiteName>Kiosk Project</SuiteName>
     <MinimumRequiredVersion>1.0.0.27</MinimumRequiredVersion>
-    <ApplicationRevision>28</ApplicationRevision>
+    <ApplicationRevision>29</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -67,10 +71,10 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>E8CC92FC32E860D499B5CCEE46C6EE88A854A6B5</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>668D28A25C8A63A3061303CB7020B227D3993411</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Standalone_1_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Standalone_2_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -85,7 +89,7 @@
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Standalone_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
@@ -219,6 +223,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Standalone_1_TemporaryKey.pfx" />
+    <None Include="Standalone_2_TemporaryKey.pfx" />
     <None Include="Standalone_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
