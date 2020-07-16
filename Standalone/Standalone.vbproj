@@ -31,7 +31,7 @@
     <PublisherName>National Insurance Board</PublisherName>
     <SuiteName>Kiosk Project</SuiteName>
     <MinimumRequiredVersion>1.0.0.27</MinimumRequiredVersion>
-    <ApplicationRevision>51</ApplicationRevision>
+    <ApplicationRevision>54</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -74,7 +74,8 @@
     <ManifestCertificateThumbprint>668D28A25C8A63A3061303CB7020B227D3993411</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Standalone_2_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>

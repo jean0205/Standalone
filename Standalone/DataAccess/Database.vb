@@ -24,7 +24,8 @@ Public Class Database
         End Using
     End Sub
     Sub RestoreDB(file As String)
-        Dim query As String = " Alter database Standalone  set offline with rollback immediate RESTORE DATABASE Standalone FROM DISK ='" & file & "' WITH REPLACE alter database Standalone set online"
+        Dim query As String = " USE [master] Alter database Standalone  set offline with rollback immediate RESTORE DATABASE Standalone 
+                                FROM DISK ='" & file & "' WITH REPLACE alter database Standalone set online"
         Using connection As New SqlConnection(conString)
             Using command As New SqlCommand(query, connection)
                 Try
