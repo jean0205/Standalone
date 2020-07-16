@@ -529,7 +529,7 @@ Public Class Frm_Employer
                 R(8) = getWeeks()
                 R(9) = earning
                 R(10) = contribution
-                R(11) = penalties
+                R(11) = Format(penalties, "#,##")
                 R(12) = interes
                 addWeeksX(R, monthly)
                 If Not isUpdating Then
