@@ -31,7 +31,7 @@
     <PublisherName>National Insurance Board</PublisherName>
     <SuiteName>Kiosk Project</SuiteName>
     <MinimumRequiredVersion>1.0.0.27</MinimumRequiredVersion>
-    <ApplicationRevision>40</ApplicationRevision>
+    <ApplicationRevision>41</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -80,7 +80,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Visualpharm-Office-Space-Touch-screen-kiosk.ico</ApplicationIcon>
