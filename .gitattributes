@@ -2,6 +2,9 @@
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
 * text=auto
+*.manifest binary
+*.application binary
+*.deploy binary
 
 ###############################################################################
 # Set default behavior for command prompt diff.
@@ -34,6 +37,7 @@
 #*.modelproj merge=binary
 #*.sqlproj   merge=binary
 #*.wwaproj   merge=binary
+
 
 ###############################################################################
 # behavior for image files
