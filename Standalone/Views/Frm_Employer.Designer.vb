@@ -879,9 +879,9 @@ Partial Class Frm_Employer
         Me.GroupBox2.Controls.Add(Me.Label1)
         Me.GroupBox2.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox2.ForeColor = System.Drawing.Color.Gainsboro
-        Me.GroupBox2.Location = New System.Drawing.Point(12, 12)
+        Me.GroupBox2.Location = New System.Drawing.Point(12, 5)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(1353, 133)
+        Me.GroupBox2.Size = New System.Drawing.Size(1353, 140)
         Me.GroupBox2.TabIndex = 1
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Employer Information"
@@ -990,7 +990,7 @@ Partial Class Frm_Employer
         Me.ibtnAddEmployee.IconColor = System.Drawing.Color.ForestGreen
         Me.ibtnAddEmployee.IconSize = 45
         Me.ibtnAddEmployee.ImageAlign = System.Drawing.ContentAlignment.BottomLeft
-        Me.ibtnAddEmployee.Location = New System.Drawing.Point(999, 33)
+        Me.ibtnAddEmployee.Location = New System.Drawing.Point(994, 33)
         Me.ibtnAddEmployee.Name = "ibtnAddEmployee"
         Me.ibtnAddEmployee.Rotation = 0R
         Me.ibtnAddEmployee.Size = New System.Drawing.Size(165, 87)

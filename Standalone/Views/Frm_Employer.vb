@@ -529,7 +529,7 @@ Public Class Frm_Employer
                 R(8) = getWeeks()
                 R(9) = earning
                 R(10) = contribution
-                R(11) = Format(penalties, "#,##")
+                R(11) = Format(penalties)
                 R(12) = interes
                 addWeeksX(R, monthly)
                 If Not isUpdating Then
@@ -889,15 +889,9 @@ Public Class Frm_Employer
         If empe.DateOB.Day < day Then
             Return Math.Round(earnings * getNisRate(year, month) / 100, 2)
         End If
-
         For week As Integer = 1 To GetNumberOfWeeksInMonth(year, month)
-            ' Dim x As Integer = DateDiff(DateInterval.Day, New DateTime(year, month, empe.DateOB.Day), New DateTime(year, month, day), FirstDayOfWeek.Monday)
-
             If chkweek1.Tag = week And chkweek1.Checked Or chkweek2.Tag = week And chkweek2.Checked Or chkweek3.Tag = week And chkweek3.Checked Or
                 chkweek4.Tag = week And chkweek4.Checked Or chkweek5.Tag = week And chkweek5.Checked Then
-
-                ' Dim x As Integer = DateDiff(DateInterval.Day, New DateTime(year, month, empe.DateOB.Day), New DateTime(year, month, day), FirstDayOfWeek.Monday)
-
                 If DateDiff(DateInterval.Day, New DateTime(year, month, empe.DateOB.Day), New DateTime(year, month, day), FirstDayOfWeek.Monday) < 0 Then
                     If monthly Then
                         totalCont += weekEarning * 1 / 100
@@ -932,44 +926,6 @@ Public Class Frm_Employer
         Next
         Return Math.Round(totalCont, 2)
     End Function
-    'Public Function constribWith60Weekly(earnings As Decimal, year As Integer, month As Integer)
-    '    Dim weekEarning As New List(Of Decimal)
-    '    Dim totalCont As Decimal
-    '    Dim day As Integer = 1
-    '    For Each chk As CheckBox In GroupBox5.Controls.OfType(Of CheckBox)
-    '        If chk.Checked Then
-    '            weekEarning.Add()
-
-    '        End If
-    '    Next
-
-    '    'get 1st month'monday
-    '    For x As Integer = 1 To DateTime.DaysInMonth(year, month)
-    '        If (New DateTime(year, month, x).DayOfWeek = DayOfWeek.Monday AndAlso New DateTime(year, month, x).Day <= 7) Then
-    '            day = x
-    '            Exit For
-    '        End If
-    '    Next
-
-    '    For week As Integer = 1 To GetNumberOfWeeksInMonth(year, month)
-    '        ' Dim x As Integer = DateDiff(DateInterval.Day, New DateTime(year, month, empe.DateOB.Day), New DateTime(year, month, day), FirstDayOfWeek.Monday)
-
-    '        If chkweek1.Tag = week And chkweek1.Checked Or chkweek2.Tag = week And chkweek2.Checked Or chkweek3.Tag = week And chkweek3.Checked Or
-    '            chkweek4.Tag = week And chkweek4.Checked Or chkweek5.Tag = week And chkweek5.Checked Then
-
-    '            If DateDiff(DateInterval.Day, New DateTime(year, month, empe.DateOB.Day), New DateTime(year, month, day), FirstDayOfWeek.Monday) >= 0 Then
-    '                totalCont += weekEarning * 1 / 100
-    '            Else
-    '                totalCont += weekEarning * getNisRate(year, month) / 100
-    '            End If
-    '        End If
-    '        day += 7
-    '    Next
-
-    '    Return Math.Round(totalCont, 2)
-
-
-    'End Function
     Public Function InPaidMonth60(year As Integer, month As Integer) As Boolean
         If month = empe.DateOB.Month Then
             Dim day = 1
@@ -1086,32 +1042,7 @@ Public Class Frm_Employer
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
-
     End Function
-
-    '    Function calculateConstribution(earning As Decimal, monthly As Boolean, weeks As Integer, year As Integer, month As String) As Decimal
-    '        If CheckInformationDate() Then
-    '            Exit Function
-    '        End If
-    '        Try
-    '            If monthly AndAlso earning > 5000 Then
-    '                earning = 5000
-    '            ElseIf Not monthly AndAlso earning > 1160 * weeks Then
-    '                earning = 1160 * weeks
-    '            End If
-    '            Dim years As Integer = DateDiff(DateInterval.Year, Today, empe.DateOB)
-
-
-    '            Dim nisrate = If((CalcularEdad(empe.DateOB) > 15 And CalcularEdad(empe.DateOB) < 60), getNisRate(year, month), 1)
-
-    '            Dim contribution As Decimal
-    '            contribution = earning * (nisrate / 100)
-    '            Return Math.Round(contribution, 2)
-    '        Catch ex As Exception
-    '            MessageBox.Show(ex.Message)
-    '        End Try
-    '#Disable Warning BC42353 ' Function doesn't return a value on all code paths
-    '    End Function
     Sub getTotalGeneral()
         Dim totalpenalties As Decimal
         Dim totalInteres As Decimal
@@ -1140,7 +1071,6 @@ Public Class Frm_Employer
         PanelEmployee.Visible = False
         ClearEmployeePanel()
     End Sub
-
     Private Async Sub ibtnEmail_Click(sender As Object, e As EventArgs) Handles ibtnEmail.Click
         Try
             If dgv1.Rows.Count = 0 Then
@@ -1376,7 +1306,6 @@ Public Class Frm_Employer
             Dim wSheet As Microsoft.Office.Interop.Excel.Worksheet
             wBook = _excel.Workbooks.Add()
             wSheet = wBook.ActiveSheet()
-
             ' Dim dt As System.Data.DataTable = dtTemp
             Dim dc As System.Data.DataColumn
             Dim dr As System.Data.DataRow
@@ -1405,16 +1334,6 @@ Public Class Frm_Employer
 
                 Next
             Next
-            '_excel.Cells(rowIndex + 4, 7) = "Contribution:"
-            '_excel.Cells(rowIndex + 4, 8) = txtContrib.Text
-            '_excel.Cells(rowIndex + 4, 9) = "Penalties:"
-            '_excel.Cells(rowIndex + 4, 10) = txtTotalPenalties.Text
-            '_excel.Cells(rowIndex + 4, 11) = "Interest:"
-            '_excel.Cells(rowIndex + 4, 12) = txtTotalInteres.Text
-            '_excel.Cells(rowIndex + 4, 13) = "Total To Pay:"
-            '_excel.Cells(rowIndex + 4, 14) = txttotalContrib.Text
-            '_excel.Cells(rowIndex + 4, 1).EntireRow.Font.Bold = True
-
             wSheet.Range(wSheet.Cells(3, 9), wSheet.Cells(100, 9)).NumberFormat = "0.00"
             wSheet.Range(wSheet.Cells(3, 10), wSheet.Cells(100, 10)).NumberFormat = "0.00"
             wSheet.Range(wSheet.Cells(3, 11), wSheet.Cells(100, 11)).NumberFormat = "0.00"
@@ -1532,7 +1451,6 @@ Public Class Frm_Employer
                                                                MessageBoxIcon.Information,
                                                                    MessageBoxDefaultButton.Button1)
         End Try
-
     End Sub
     Function CheckWeeksEarning()
         If cmbFrequence.SelectedIndex = 2 Then
@@ -1594,7 +1512,6 @@ Public Class Frm_Employer
     'Dim edad As Decimal = DateDiff(DateInterval.Year, empe.DateOB, Today, FirstDayOfWeek.Monday, FirstWeekOfYear.Jan1)
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         CircularProgressBar1.Text = CLng((CircularProgressBar1.Value * 100) / CircularProgressBar1.Maximum)
-
         If CircularProgressBar1.Value = CircularProgressBar1.Maximum Then
             Timer1.Stop()
         End If
