@@ -84,7 +84,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Visualpharm-Office-Space-Touch-screen-kiosk.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Visualpharm-Office-Space-Touch-screen-kiosk.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
@@ -93,7 +93,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Standalone_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CircularProgressBar, Version=2.8.0.16, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
@@ -223,9 +224,6 @@
     </None>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Standalone_1_TemporaryKey.pfx" />
-    <None Include="Standalone_2_TemporaryKey.pfx" />
-    <None Include="Standalone_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">
@@ -241,7 +239,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="noimages.jpg" />
-    <Content Include="Visualpharm-Office-Space-Touch-screen-kiosk.ico" />
+    <Content Include="Resources\Visualpharm-Office-Space-Touch-screen-kiosk.ico" />
     <None Include="Resources\362-3628895_admission-to-museum-casanova-red-info-png-transparent1.png" />
     <None Include="Resources\362-3628895_admission-to-museum-casanova-red-info-png-transparent.png" />
   </ItemGroup>

@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Kiosk", "Kiosk\Kiosk.vdproj", "{9B84A953-AC77-42B6-A059-187C03D19DAB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiosAPI", "KiosAPI\KiosAPI.csproj", "{3CE77D89-B39D-4696-99C3-1584D3762B6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,10 @@ Global
 		{8C2E457F-A286-4FBE-BD1C-41801D6A7E28}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9B84A953-AC77-42B6-A059-187C03D19DAB}.Debug|Any CPU.ActiveCfg = Debug
 		{9B84A953-AC77-42B6-A059-187C03D19DAB}.Release|Any CPU.ActiveCfg = Release
+		{3CE77D89-B39D-4696-99C3-1584D3762B6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CE77D89-B39D-4696-99C3-1584D3762B6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CE77D89-B39D-4696-99C3-1584D3762B6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CE77D89-B39D-4696-99C3-1584D3762B6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
