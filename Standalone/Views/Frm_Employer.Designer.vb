@@ -84,15 +84,19 @@ Partial Class Frm_Employer
         Me.txttotalContrib = New System.Windows.Forms.TextBox()
         Me.dgv1 = New System.Windows.Forms.DataGridView()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.gbPeriod = New System.Windows.Forms.GroupBox()
+        Me.ibtnBack = New FontAwesome.Sharp.IconButton()
+        Me.ibtnFoward = New FontAwesome.Sharp.IconButton()
+        Me.dtpPeriod = New System.Windows.Forms.DateTimePicker()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
         Me.txtEmail1 = New System.Windows.Forms.TextBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.txtemail2 = New System.Windows.Forms.TextBox()
+        Me.ibtnAddEmployee = New FontAwesome.Sharp.IconButton()
         Me.ibtnEmail = New FontAwesome.Sharp.IconButton()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtSub = New System.Windows.Forms.TextBox()
-        Me.ibtnAddEmployee = New FontAwesome.Sharp.IconButton()
         Me.txtName = New System.Windows.Forms.TextBox()
         Me.txtNumber = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -110,6 +114,7 @@ Partial Class Frm_Employer
         Me.GroupBox4.SuspendLayout()
         CType(Me.dgv1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox2.SuspendLayout()
+        Me.gbPeriod.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -132,9 +137,9 @@ Partial Class Frm_Employer
         Me.GroupBox1.Controls.Add(Me.txttotalContrib)
         Me.GroupBox1.Controls.Add(Me.dgv1)
         Me.GroupBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupBox1.Location = New System.Drawing.Point(12, 151)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 147)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(1353, 607)
+        Me.GroupBox1.Size = New System.Drawing.Size(1353, 611)
         Me.GroupBox1.TabIndex = 0
         Me.GroupBox1.TabStop = False
         '
@@ -144,7 +149,7 @@ Partial Class Frm_Employer
         Me.PanelEmployee.Controls.Add(Me.GroupBox3)
         Me.PanelEmployee.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.PanelEmployee.ForeColor = System.Drawing.Color.Gainsboro
-        Me.PanelEmployee.Location = New System.Drawing.Point(195, 56)
+        Me.PanelEmployee.Location = New System.Drawing.Point(195, 58)
         Me.PanelEmployee.Name = "PanelEmployee"
         Me.PanelEmployee.Size = New System.Drawing.Size(925, 451)
         Me.PanelEmployee.TabIndex = 1
@@ -691,7 +696,7 @@ Partial Class Frm_Employer
         Me.CircularProgressBar1.InnerColor = System.Drawing.Color.FromArgb(CType(CType(23, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(49, Byte), Integer))
         Me.CircularProgressBar1.InnerMargin = 1
         Me.CircularProgressBar1.InnerWidth = -1
-        Me.CircularProgressBar1.Location = New System.Drawing.Point(483, 91)
+        Me.CircularProgressBar1.Location = New System.Drawing.Point(483, 93)
         Me.CircularProgressBar1.MarqueeAnimationSpeed = 2000
         Me.CircularProgressBar1.Name = "CircularProgressBar1"
         Me.CircularProgressBar1.OuterColor = System.Drawing.Color.Green
@@ -721,7 +726,7 @@ Partial Class Frm_Employer
         Me.Label15.AutoSize = True
         Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Underline), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label15.ForeColor = System.Drawing.Color.Gainsboro
-        Me.Label15.Location = New System.Drawing.Point(437, 574)
+        Me.Label15.Location = New System.Drawing.Point(437, 578)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(121, 20)
         Me.Label15.TabIndex = 35
@@ -734,7 +739,7 @@ Partial Class Frm_Employer
         Me.txtContrib.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtContrib.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtContrib.ForeColor = System.Drawing.Color.Gainsboro
-        Me.txtContrib.Location = New System.Drawing.Point(558, 575)
+        Me.txtContrib.Location = New System.Drawing.Point(558, 579)
         Me.txtContrib.Name = "txtContrib"
         Me.txtContrib.ReadOnly = True
         Me.txtContrib.Size = New System.Drawing.Size(95, 19)
@@ -747,7 +752,7 @@ Partial Class Frm_Employer
         Me.Label14.AutoSize = True
         Me.Label14.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Underline), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label14.ForeColor = System.Drawing.Color.Gainsboro
-        Me.Label14.Location = New System.Drawing.Point(18, 574)
+        Me.Label14.Location = New System.Drawing.Point(18, 578)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(101, 20)
         Me.Label14.TabIndex = 33
@@ -760,7 +765,7 @@ Partial Class Frm_Employer
         Me.txtemployees.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtemployees.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtemployees.ForeColor = System.Drawing.Color.Gainsboro
-        Me.txtemployees.Location = New System.Drawing.Point(120, 575)
+        Me.txtemployees.Location = New System.Drawing.Point(120, 579)
         Me.txtemployees.Name = "txtemployees"
         Me.txtemployees.ReadOnly = True
         Me.txtemployees.Size = New System.Drawing.Size(66, 19)
@@ -772,7 +777,7 @@ Partial Class Frm_Employer
         Me.Label20.AutoSize = True
         Me.Label20.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Underline), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label20.ForeColor = System.Drawing.Color.Gainsboro
-        Me.Label20.Location = New System.Drawing.Point(880, 574)
+        Me.Label20.Location = New System.Drawing.Point(880, 578)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(77, 20)
         Me.Label20.TabIndex = 31
@@ -785,7 +790,7 @@ Partial Class Frm_Employer
         Me.txtTotalInteres.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtTotalInteres.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtTotalInteres.ForeColor = System.Drawing.Color.Gainsboro
-        Me.txtTotalInteres.Location = New System.Drawing.Point(957, 575)
+        Me.txtTotalInteres.Location = New System.Drawing.Point(957, 579)
         Me.txtTotalInteres.Name = "txtTotalInteres"
         Me.txtTotalInteres.ReadOnly = True
         Me.txtTotalInteres.Size = New System.Drawing.Size(95, 19)
@@ -798,7 +803,7 @@ Partial Class Frm_Employer
         Me.Label19.AutoSize = True
         Me.Label19.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Underline), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label19.ForeColor = System.Drawing.Color.Gainsboro
-        Me.Label19.Location = New System.Drawing.Point(678, 574)
+        Me.Label19.Location = New System.Drawing.Point(678, 578)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(88, 20)
         Me.Label19.TabIndex = 29
@@ -811,7 +816,7 @@ Partial Class Frm_Employer
         Me.txtTotalPenalties.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtTotalPenalties.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtTotalPenalties.ForeColor = System.Drawing.Color.Gainsboro
-        Me.txtTotalPenalties.Location = New System.Drawing.Point(768, 575)
+        Me.txtTotalPenalties.Location = New System.Drawing.Point(768, 579)
         Me.txtTotalPenalties.Name = "txtTotalPenalties"
         Me.txtTotalPenalties.ReadOnly = True
         Me.txtTotalPenalties.Size = New System.Drawing.Size(95, 19)
@@ -824,7 +829,7 @@ Partial Class Frm_Employer
         Me.Label18.AutoSize = True
         Me.Label18.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.0!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Underline), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label18.ForeColor = System.Drawing.Color.Gainsboro
-        Me.Label18.Location = New System.Drawing.Point(1074, 569)
+        Me.Label18.Location = New System.Drawing.Point(1074, 573)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(135, 25)
         Me.Label18.TabIndex = 27
@@ -837,7 +842,7 @@ Partial Class Frm_Employer
         Me.txttotalContrib.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txttotalContrib.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txttotalContrib.ForeColor = System.Drawing.Color.Gainsboro
-        Me.txttotalContrib.Location = New System.Drawing.Point(1208, 571)
+        Me.txttotalContrib.Location = New System.Drawing.Point(1208, 575)
         Me.txttotalContrib.Name = "txttotalContrib"
         Me.txttotalContrib.ReadOnly = True
         Me.txttotalContrib.Size = New System.Drawing.Size(125, 23)
@@ -861,18 +866,19 @@ Partial Class Frm_Employer
         Me.dgv1.RowHeadersVisible = False
         Me.dgv1.RowHeadersWidth = 50
         Me.dgv1.RowTemplate.Height = 35
-        Me.dgv1.Size = New System.Drawing.Size(1341, 525)
+        Me.dgv1.Size = New System.Drawing.Size(1341, 529)
         Me.dgv1.TabIndex = 0
         '
         'GroupBox2
         '
         Me.GroupBox2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GroupBox2.Controls.Add(Me.gbPeriod)
         Me.GroupBox2.Controls.Add(Me.GroupBox7)
+        Me.GroupBox2.Controls.Add(Me.ibtnAddEmployee)
         Me.GroupBox2.Controls.Add(Me.ibtnEmail)
         Me.GroupBox2.Controls.Add(Me.Label4)
         Me.GroupBox2.Controls.Add(Me.txtSub)
-        Me.GroupBox2.Controls.Add(Me.ibtnAddEmployee)
         Me.GroupBox2.Controls.Add(Me.txtName)
         Me.GroupBox2.Controls.Add(Me.txtNumber)
         Me.GroupBox2.Controls.Add(Me.Label2)
@@ -881,10 +887,67 @@ Partial Class Frm_Employer
         Me.GroupBox2.ForeColor = System.Drawing.Color.Gainsboro
         Me.GroupBox2.Location = New System.Drawing.Point(12, 5)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(1353, 140)
+        Me.GroupBox2.Size = New System.Drawing.Size(1353, 136)
         Me.GroupBox2.TabIndex = 1
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Employer Information"
+        '
+        'gbPeriod
+        '
+        Me.gbPeriod.Controls.Add(Me.ibtnBack)
+        Me.gbPeriod.Controls.Add(Me.ibtnFoward)
+        Me.gbPeriod.Controls.Add(Me.dtpPeriod)
+        Me.gbPeriod.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.gbPeriod.ForeColor = System.Drawing.Color.Gainsboro
+        Me.gbPeriod.Location = New System.Drawing.Point(957, 11)
+        Me.gbPeriod.Name = "gbPeriod"
+        Me.gbPeriod.Size = New System.Drawing.Size(234, 65)
+        Me.gbPeriod.TabIndex = 39
+        Me.gbPeriod.TabStop = False
+        Me.gbPeriod.Text = "Select the period"
+        '
+        'ibtnBack
+        '
+        Me.ibtnBack.BackColor = System.Drawing.Color.FromArgb(CType(CType(28, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(53, Byte), Integer))
+        Me.ibtnBack.Flip = FontAwesome.Sharp.FlipOrientation.Horizontal
+        Me.ibtnBack.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ibtnBack.ForeColor = System.Drawing.Color.Gainsboro
+        Me.ibtnBack.IconChar = FontAwesome.Sharp.IconChar.AngleDoubleRight
+        Me.ibtnBack.IconColor = System.Drawing.Color.Gainsboro
+        Me.ibtnBack.IconSize = 25
+        Me.ibtnBack.ImageAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.ibtnBack.Location = New System.Drawing.Point(6, 24)
+        Me.ibtnBack.Name = "ibtnBack"
+        Me.ibtnBack.Rotation = 0R
+        Me.ibtnBack.Size = New System.Drawing.Size(43, 35)
+        Me.ibtnBack.TabIndex = 5
+        Me.ibtnBack.UseVisualStyleBackColor = False
+        '
+        'ibtnFoward
+        '
+        Me.ibtnFoward.BackColor = System.Drawing.Color.FromArgb(CType(CType(28, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(53, Byte), Integer))
+        Me.ibtnFoward.Flip = FontAwesome.Sharp.FlipOrientation.Normal
+        Me.ibtnFoward.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ibtnFoward.ForeColor = System.Drawing.Color.Gainsboro
+        Me.ibtnFoward.IconChar = FontAwesome.Sharp.IconChar.AngleDoubleRight
+        Me.ibtnFoward.IconColor = System.Drawing.Color.Gainsboro
+        Me.ibtnFoward.IconSize = 25
+        Me.ibtnFoward.ImageAlign = System.Drawing.ContentAlignment.BottomRight
+        Me.ibtnFoward.Location = New System.Drawing.Point(181, 24)
+        Me.ibtnFoward.Name = "ibtnFoward"
+        Me.ibtnFoward.Rotation = 0R
+        Me.ibtnFoward.Size = New System.Drawing.Size(43, 35)
+        Me.ibtnFoward.TabIndex = 4
+        Me.ibtnFoward.UseVisualStyleBackColor = False
+        '
+        'dtpPeriod
+        '
+        Me.dtpPeriod.CustomFormat = """yyyy/MM"""
+        Me.dtpPeriod.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpPeriod.Location = New System.Drawing.Point(64, 29)
+        Me.dtpPeriod.Name = "dtpPeriod"
+        Me.dtpPeriod.Size = New System.Drawing.Size(105, 24)
+        Me.dtpPeriod.TabIndex = 17
         '
         'GroupBox7
         '
@@ -894,9 +957,9 @@ Partial Class Frm_Employer
         Me.GroupBox7.Controls.Add(Me.txtemail2)
         Me.GroupBox7.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox7.ForeColor = System.Drawing.Color.Gainsboro
-        Me.GroupBox7.Location = New System.Drawing.Point(518, 22)
+        Me.GroupBox7.Location = New System.Drawing.Point(494, 17)
         Me.GroupBox7.Name = "GroupBox7"
-        Me.GroupBox7.Size = New System.Drawing.Size(457, 98)
+        Me.GroupBox7.Size = New System.Drawing.Size(454, 98)
         Me.GroupBox7.TabIndex = 37
         Me.GroupBox7.TabStop = False
         Me.GroupBox7.Text = "Enter your email address here to get a copy of the remittance forms"
@@ -935,6 +998,28 @@ Partial Class Frm_Employer
         Me.txtemail2.Size = New System.Drawing.Size(344, 26)
         Me.txtemail2.TabIndex = 34
         '
+        'ibtnAddEmployee
+        '
+        Me.ibtnAddEmployee.FlatAppearance.BorderSize = 2
+        Me.ibtnAddEmployee.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(5, Byte), Integer), CType(CType(7, Byte), Integer), CType(CType(11, Byte), Integer))
+        Me.ibtnAddEmployee.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.ibtnAddEmployee.Flip = FontAwesome.Sharp.FlipOrientation.Normal
+        Me.ibtnAddEmployee.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ibtnAddEmployee.ForeColor = System.Drawing.Color.Gainsboro
+        Me.ibtnAddEmployee.IconChar = FontAwesome.Sharp.IconChar.Plus
+        Me.ibtnAddEmployee.IconColor = System.Drawing.Color.ForestGreen
+        Me.ibtnAddEmployee.IconSize = 45
+        Me.ibtnAddEmployee.ImageAlign = System.Drawing.ContentAlignment.BottomLeft
+        Me.ibtnAddEmployee.Location = New System.Drawing.Point(957, 81)
+        Me.ibtnAddEmployee.Name = "ibtnAddEmployee"
+        Me.ibtnAddEmployee.Rotation = 0R
+        Me.ibtnAddEmployee.Size = New System.Drawing.Size(234, 49)
+        Me.ibtnAddEmployee.TabIndex = 29
+        Me.ibtnAddEmployee.Text = "Add Employee"
+        Me.ibtnAddEmployee.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ibtnAddEmployee.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.ibtnAddEmployee.UseVisualStyleBackColor = True
+        '
         'ibtnEmail
         '
         Me.ibtnEmail.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -945,16 +1030,16 @@ Partial Class Frm_Employer
         Me.ibtnEmail.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.ibtnEmail.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ibtnEmail.Flip = FontAwesome.Sharp.FlipOrientation.Normal
-        Me.ibtnEmail.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ibtnEmail.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ibtnEmail.ForeColor = System.Drawing.Color.FromArgb(CType(CType(28, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(53, Byte), Integer))
         Me.ibtnEmail.IconChar = FontAwesome.Sharp.IconChar.EnvelopeOpenText
         Me.ibtnEmail.IconColor = System.Drawing.Color.ForestGreen
         Me.ibtnEmail.IconSize = 60
         Me.ibtnEmail.ImageAlign = System.Drawing.ContentAlignment.BottomLeft
-        Me.ibtnEmail.Location = New System.Drawing.Point(1169, 33)
+        Me.ibtnEmail.Location = New System.Drawing.Point(1201, 29)
         Me.ibtnEmail.Name = "ibtnEmail"
         Me.ibtnEmail.Rotation = 0R
-        Me.ibtnEmail.Size = New System.Drawing.Size(179, 87)
+        Me.ibtnEmail.Size = New System.Drawing.Size(146, 74)
         Me.ibtnEmail.TabIndex = 32
         Me.ibtnEmail.Text = "Submit Form"
         Me.ibtnEmail.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -963,7 +1048,7 @@ Partial Class Frm_Employer
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(307, 41)
+        Me.Label4.Location = New System.Drawing.Point(304, 41)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(42, 20)
         Me.Label4.TabIndex = 31
@@ -972,38 +1057,16 @@ Partial Class Frm_Employer
         'txtSub
         '
         Me.txtSub.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSub.Location = New System.Drawing.Point(348, 35)
+        Me.txtSub.Location = New System.Drawing.Point(345, 35)
         Me.txtSub.Name = "txtSub"
         Me.txtSub.ReadOnly = True
         Me.txtSub.Size = New System.Drawing.Size(60, 26)
         Me.txtSub.TabIndex = 30
         '
-        'ibtnAddEmployee
-        '
-        Me.ibtnAddEmployee.FlatAppearance.BorderSize = 2
-        Me.ibtnAddEmployee.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(5, Byte), Integer), CType(CType(7, Byte), Integer), CType(CType(11, Byte), Integer))
-        Me.ibtnAddEmployee.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.ibtnAddEmployee.Flip = FontAwesome.Sharp.FlipOrientation.Normal
-        Me.ibtnAddEmployee.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ibtnAddEmployee.ForeColor = System.Drawing.Color.Gainsboro
-        Me.ibtnAddEmployee.IconChar = FontAwesome.Sharp.IconChar.Plus
-        Me.ibtnAddEmployee.IconColor = System.Drawing.Color.ForestGreen
-        Me.ibtnAddEmployee.IconSize = 45
-        Me.ibtnAddEmployee.ImageAlign = System.Drawing.ContentAlignment.BottomLeft
-        Me.ibtnAddEmployee.Location = New System.Drawing.Point(994, 33)
-        Me.ibtnAddEmployee.Name = "ibtnAddEmployee"
-        Me.ibtnAddEmployee.Rotation = 0R
-        Me.ibtnAddEmployee.Size = New System.Drawing.Size(165, 87)
-        Me.ibtnAddEmployee.TabIndex = 29
-        Me.ibtnAddEmployee.Text = "Add Employee"
-        Me.ibtnAddEmployee.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ibtnAddEmployee.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.ibtnAddEmployee.UseVisualStyleBackColor = True
-        '
         'txtName
         '
         Me.txtName.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtName.Location = New System.Drawing.Point(146, 83)
+        Me.txtName.Location = New System.Drawing.Point(143, 83)
         Me.txtName.Name = "txtName"
         Me.txtName.ReadOnly = True
         Me.txtName.Size = New System.Drawing.Size(344, 26)
@@ -1012,7 +1075,7 @@ Partial Class Frm_Employer
         'txtNumber
         '
         Me.txtNumber.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNumber.Location = New System.Drawing.Point(148, 35)
+        Me.txtNumber.Location = New System.Drawing.Point(145, 35)
         Me.txtNumber.Name = "txtNumber"
         Me.txtNumber.ReadOnly = True
         Me.txtNumber.Size = New System.Drawing.Size(151, 26)
@@ -1021,7 +1084,7 @@ Partial Class Frm_Employer
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(85, 89)
+        Me.Label2.Location = New System.Drawing.Point(82, 89)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(55, 20)
         Me.Label2.TabIndex = 1
@@ -1030,7 +1093,7 @@ Partial Class Frm_Employer
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(7, 41)
+        Me.Label1.Location = New System.Drawing.Point(4, 41)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(139, 20)
         Me.Label1.TabIndex = 0
@@ -1070,6 +1133,7 @@ Partial Class Frm_Employer
         CType(Me.dgv1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
+        Me.gbPeriod.ResumeLayout(False)
         Me.GroupBox7.ResumeLayout(False)
         Me.GroupBox7.PerformLayout()
         Me.ResumeLayout(False)
@@ -1150,4 +1214,8 @@ Partial Class Frm_Employer
     Friend WithEvents CircularProgressBar1 As CircularProgressBar.CircularProgressBar
     Friend WithEvents Timer1 As Timer
     Friend WithEvents chkVoluntary As CheckBox
+    Friend WithEvents gbPeriod As GroupBox
+    Friend WithEvents ibtnBack As FontAwesome.Sharp.IconButton
+    Friend WithEvents ibtnFoward As FontAwesome.Sharp.IconButton
+    Friend WithEvents dtpPeriod As DateTimePicker
 End Class

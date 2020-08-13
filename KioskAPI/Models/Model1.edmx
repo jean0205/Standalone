@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="StandaloneModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CNTE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployerNo" Type="int" Nullable="false" />
+          <Property Name="EmployerSub" Type="int" Nullable="false" />
+          <Property Name="Year" Type="int" Nullable="false" />
+          <Property Name="Month" Type="int" Nullable="false" />
+          <Property Name="NisNumber" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Frequence" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="WeekW" Type="int" Nullable="false" />
+          <Property Name="Earnings" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Contribution" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Penalties" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Interest" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Week1" Type="varchar" MaxLength="10" />
+          <Property Name="Week2" Type="varchar" MaxLength="10" />
+          <Property Name="Week3" Type="varchar" MaxLength="10" />
+          <Property Name="Week4" Type="varchar" MaxLength="10" />
+          <Property Name="Week5" Type="varchar" MaxLength="10" />
+          <Property Name="RecordDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="EMPE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NisNumber" Type="int" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="MaidenName" Type="varchar" MaxLength="25" />
+          <Property Name="DateOB" Type="date" />
+          <Property Name="Address" Type="varchar" MaxLength="25" />
+          <Property Name="Town" Type="varchar" MaxLength="25" />
+          <Property Name="Parish" Type="varchar" MaxLength="25" />
+          <Property Name="Phone" Type="varchar" MaxLength="15" />
+          <Property Name="Email1" Type="varchar" MaxLength="35" />
+          <Property Name="Email2" Type="varchar" MaxLength="35" />
+        </EntityType>
+        <EntityType Name="EMPR">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployerNo" Type="int" Nullable="false" />
+          <Property Name="EmployerSub" Type="int" Nullable="false" />
+          <Property Name="BusinessName" Type="varchar" MaxLength="35" />
+          <Property Name="RealName" Type="varchar" MaxLength="35" />
+          <Property Name="BusinessAddress" Type="varchar" MaxLength="35" />
+          <Property Name="BusinessTown" Type="varchar" MaxLength="25" />
+          <Property Name="BusinesssParish" Type="varchar" MaxLength="25" />
+          <Property Name="RealAddress" Type="varchar" MaxLength="35" />
+          <Property Name="RealTown" Type="varchar" MaxLength="25" />
+          <Property Name="RealParish" Type="varchar" MaxLength="25" />
+          <Property Name="RealPhone" Type="varchar" MaxLength="15" />
+          <Property Name="BusinessPhone" Type="varchar" MaxLength="15" />
+          <Property Name="Email1" Type="varchar" MaxLength="35" />
+          <Property Name="Email2" Type="varchar" MaxLength="35" />
+        </EntityType>
+        <EntityContainer Name="StandaloneModelStoreContainer">
+          <EntitySet Name="CNTE" EntityType="Self.CNTE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EMPE" EntityType="Self.EMPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EMPR" EntityType="Self.EMPR" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StandaloneModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CNTE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployerNo" Type="Int32" Nullable="false" />
+          <Property Name="EmployerSub" Type="Int32" Nullable="false" />
+          <Property Name="Year" Type="Int32" Nullable="false" />
+          <Property Name="Month" Type="Int32" Nullable="false" />
+          <Property Name="NisNumber" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Frequence" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="WeekW" Type="Int32" Nullable="false" />
+          <Property Name="Earnings" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Contribution" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Penalties" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Interest" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Week1" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Week2" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Week3" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Week4" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Week5" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="RecordDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="EMPE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NisNumber" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MaidenName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="DateOB" Type="DateTime" Precision="0" />
+          <Property Name="Address" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Town" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Parish" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Phone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Email1" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
+          <Property Name="Email2" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="EMPR">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployerNo" Type="Int32" Nullable="false" />
+          <Property Name="EmployerSub" Type="Int32" Nullable="false" />
+          <Property Name="BusinessName" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
+          <Property Name="RealName" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessAddress" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessTown" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="BusinesssParish" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="RealAddress" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
+          <Property Name="RealTown" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="RealParish" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="RealPhone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessPhone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Email1" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
+          <Property Name="Email2" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="StandaloneEntities2" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CNTEs" EntityType="Self.CNTE" />
+          <EntitySet Name="EMPEs" EntityType="Self.EMPE" />
+          <EntitySet Name="EMPRs" EntityType="Self.EMPR" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="StandaloneModelStoreContainer" CdmEntityContainer="StandaloneEntities2">
+          <EntitySetMapping Name="CNTEs">
+            <EntityTypeMapping TypeName="StandaloneModel.CNTE">
+              <MappingFragment StoreEntitySet="CNTE">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="EmployerNo" ColumnName="EmployerNo" />
+                <ScalarProperty Name="EmployerSub" ColumnName="EmployerSub" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Month" ColumnName="Month" />
+                <ScalarProperty Name="NisNumber" ColumnName="NisNumber" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Frequence" ColumnName="Frequence" />
+                <ScalarProperty Name="WeekW" ColumnName="WeekW" />
+                <ScalarProperty Name="Earnings" ColumnName="Earnings" />
+                <ScalarProperty Name="Contribution" ColumnName="Contribution" />
+                <ScalarProperty Name="Penalties" ColumnName="Penalties" />
+                <ScalarProperty Name="Interest" ColumnName="Interest" />
+                <ScalarProperty Name="Week1" ColumnName="Week1" />
+                <ScalarProperty Name="Week2" ColumnName="Week2" />
+                <ScalarProperty Name="Week3" ColumnName="Week3" />
+                <ScalarProperty Name="Week4" ColumnName="Week4" />
+                <ScalarProperty Name="Week5" ColumnName="Week5" />
+                <ScalarProperty Name="RecordDate" ColumnName="RecordDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EMPEs">
+            <EntityTypeMapping TypeName="StandaloneModel.EMPE">
+              <MappingFragment StoreEntitySet="EMPE">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="NisNumber" ColumnName="NisNumber" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="MaidenName" ColumnName="MaidenName" />
+                <ScalarProperty Name="DateOB" ColumnName="DateOB" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Town" ColumnName="Town" />
+                <ScalarProperty Name="Parish" ColumnName="Parish" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email1" ColumnName="Email1" />
+                <ScalarProperty Name="Email2" ColumnName="Email2" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EMPRs">
+            <EntityTypeMapping TypeName="StandaloneModel.EMPR">
+              <MappingFragment StoreEntitySet="EMPR">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="EmployerNo" ColumnName="EmployerNo" />
+                <ScalarProperty Name="EmployerSub" ColumnName="EmployerSub" />
+                <ScalarProperty Name="BusinessName" ColumnName="BusinessName" />
+                <ScalarProperty Name="RealName" ColumnName="RealName" />
+                <ScalarProperty Name="BusinessAddress" ColumnName="BusinessAddress" />
+                <ScalarProperty Name="BusinessTown" ColumnName="BusinessTown" />
+                <ScalarProperty Name="BusinesssParish" ColumnName="BusinesssParish" />
+                <ScalarProperty Name="RealAddress" ColumnName="RealAddress" />
+                <ScalarProperty Name="RealTown" ColumnName="RealTown" />
+                <ScalarProperty Name="RealParish" ColumnName="RealParish" />
+                <ScalarProperty Name="RealPhone" ColumnName="RealPhone" />
+                <ScalarProperty Name="BusinessPhone" ColumnName="BusinessPhone" />
+                <ScalarProperty Name="Email1" ColumnName="Email1" />
+                <ScalarProperty Name="Email2" ColumnName="Email2" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

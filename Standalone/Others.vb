@@ -6,6 +6,41 @@ Imports System.Text.RegularExpressions
 Imports Microsoft.Office.Interop
 
 Public Class Others
+    Public Function GetImageAPI(ByVal nisnum As String) As Image
+
+        Dim tokenHandle As New IntPtr(0)
+        Dim myimage As Image
+        Try
+            'create file name and check if file exist.
+            Dim filname As String
+
+            'add dash 
+            Dim fnlen As Integer
+            fnlen = nisnum.Length
+            filname = Mid(nisnum, 1, fnlen - 1) + "-" + Mid(nisnum, fnlen, 1) + ".jpg"
+
+
+            If File.Exists("\\niserver\DATACARD\Photos\" + filname) Then
+                myimage = Image.FromFile("C:\Photos\" + filname)
+                Return myimage
+            Else
+                While filname.Length < 14
+                    filname = "0" + filname
+                End While
+                If File.Exists("\\niserver\DATACARD\Photos\" + filname) Then
+                    Return Image.FromFile("\\niserver\DATACARD\Photos\" + filname)
+                Else
+                    myimage = Image.FromFile("noimages.jpg")
+                    Return myimage
+                End If
+            End If
+        Catch ex As Exception
+            myimage = Image.FromFile("noimages.jpg")
+            Return myimage
+            'exception
+        End Try
+
+    End Function
     Public Function GetImage(ByVal nisnum As String) As Image
 
         Dim tokenHandle As New IntPtr(0)
@@ -18,15 +53,15 @@ Public Class Others
             Dim fnlen As Integer
             fnlen = nisnum.Length
             filname = Mid(nisnum, 1, fnlen - 1) + "-" + Mid(nisnum, fnlen, 1) + ".jpg"
-            If File.Exists("C:\Photos\" + filname) Then
+            If File.Exists("\\niserver\DATACARD\Photos\" + filname) Then
                 myimage = Image.FromFile("C:\Photos\" + filname)
                 Return myimage
             Else
                 While filname.Length < 14
                     filname = "0" + filname
                 End While
-                If File.Exists("C:\Photos\" + filname) Then
-                    Return Image.FromFile("C:\Photos\" + filname)
+                If File.Exists("\\niserver\DATACARD\Photos\" + filname) Then
+                    Return Image.FromFile("\\niserver\DATACARD\Photos\" + filname)
                 Else
                     myimage = Image.FromFile("noimages.jpg")
                     Return myimage
@@ -71,7 +106,7 @@ Public Class Others
             Dim sBodyLen As Integer = oMsg.Body.Length
             oAttach = oAttachs.Add(files(0), , sBodyLen + 1, Path.GetFileName(files(0)))
             Dim oRecips As Outlook.Recipients = CType(oMsg.Recipients, Outlook.Recipients)
-            Dim oRecip As Outlook.Recipient = CType(oRecips.Add(emailAddress), Outlook.Recipient)
+            Dim oRecip As Outlook.Recipient = CType(oRecips.Add("jcsoto@nisgrenada.org"), Outlook.Recipient)
 
             oRecip.Resolve()
             SetAccount(oMsg, "nisgrenada@gmail.com")

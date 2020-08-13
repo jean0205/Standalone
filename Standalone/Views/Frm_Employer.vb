@@ -1,7 +1,12 @@
 ﻿Imports System.Diagnostics.Eventing.Reader
 Imports System.Globalization
+Imports System.IO
+Imports System.Net
 Imports System.Xml
 Imports Microsoft.VisualBasic.CompilerServices
+Imports Newtonsoft.Json
+Imports System.ComponentModel
+
 
 Public Class Frm_Employer
     Dim db As New AccessBD
@@ -22,7 +27,7 @@ Public Class Frm_Employer
 
     End Sub
     Private Sub Frm_Employer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        db.ResetEarnings(empr.EmployerNo, empr.EmployerSub)
+        'db.ResetEarnings(empr.EmployerNo, empr.EmployerSub)
         'fill comboboxyears
         fillCmbYears()
         txtNumber.Text = empr.EmployerNo
@@ -63,15 +68,19 @@ Public Class Frm_Employer
         Form1.cleanTXT()
         Me.AcceptButton = ibtnCheck
     End Sub
-    Private Sub ibtnCheck_Click(sender As Object, e As EventArgs) Handles ibtnCheck.Click
+    Private Async Sub ibtnCheck_Click(sender As Object, e As EventArgs) Handles ibtnCheck.Click
         If CheckInformation() Then
             Exit Sub
         End If
         Dim nisNumber = txtNisNumber.Text
         Try
-            If db.employeeExist(nisNumber) Then
-                Dim empe As New Employee
-                empe = db.getEmployeeInfo(nisNumber)
+            Dim response As String = Await GetEmployeeHttp(nisNumber)
+            Dim lstEmpe As List(Of Employee) = JsonConvert.DeserializeObject(Of List(Of Employee))(response)
+            Dim empe As New Employee
+
+            If lstEmpe.Count > 0 Then
+                empe = lstEmpe(0)
+                'empe = db.getEmployeeInfo(nisNumber)
                 Me.empe = empe
                 txtEmployeeName.Text = empe.FirstName + " " + empe.Lastname + " " + empe.MaidenName
                 Dim parish As String = String.Empty
@@ -101,8 +110,11 @@ Public Class Frm_Employer
                 End Try
                 dtpBOB.Value = empe.DateOB
                 PanelEmployee2.Visible = True
-                Dim oth As New Others
-                PictureBox1.Image = oth.GetImage(nisNumber)
+                Try
+                    PictureBox1.Image = Await GetImageHttp(nisNumber)
+                Catch ex As Exception
+                    PictureBox1.Image = Image.FromFile("noimages.jpg")
+                End Try
             Else
                 MessageBox.Show("NIS number does not exist. Please check and try again",
                                                "Wrong Number!",
@@ -117,8 +129,6 @@ Public Class Frm_Employer
                                          MessageBoxIcon.Error,
                                              MessageBoxDefaultButton.Button1)
         End Try
-
-
     End Sub
     Private Sub ibtnAddEmployee_Click(sender As Object, e As EventArgs) Handles ibtnAddEmployee.Click
         PanelEmployee.Visible = True
@@ -160,6 +170,14 @@ Public Class Frm_Employer
         Dim weeks As Integer = DateDiff(DateInterval.WeekOfYear, dateto, dateFrom)
         Return weeks
     End Function
+    'Select tha period
+    Private Sub ibtnBack_Click(sender As Object, e As EventArgs) Handles ibtnBack.Click
+        dtpPeriod.Value = dtpPeriod.Value.AddMonths(-1)
+    End Sub
+
+    Private Sub ibtnFoward_Click(sender As Object, e As EventArgs) Handles ibtnFoward.Click
+        dtpPeriod.Value = dtpPeriod.Value.AddMonths(1)
+    End Sub
 
 #Region "Events"
     Private Sub txtNisNumber_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtNisNumber.KeyPress
@@ -435,15 +453,31 @@ Public Class Frm_Employer
             End If
         End If
     End Sub
+
+
+
+
 #End Region
 #Region "Helpers"
-    Sub loadRemittance()
+    Async Sub loadRemittance()
         Try
             dgv1.Columns.Clear()
-            dgv1.DataSource = db.getRemittance(empr.EmployerNo, empr.EmployerSub)
+            Dim checkColumn As New DataGridViewCheckBoxColumn
+            checkColumn.HeaderText = "Select"
+            checkColumn.Name = "select"
+            checkColumn.ReadOnly = False
+            dgv1.Columns.Add(checkColumn)
+
+            'dgv1.DataSource = db.getRemittance(empr.EmployerNo, empr.EmployerSub)
+            'dgv1.DataSource = db.getRemittanceLite(empr.EmployerNo, empr.EmployerSub)
+            If dgv1.Rows.Count = 0 Then
+                Dim response As String = Await GetLastRemitanceHttp(empr.EmployerNo, empr.EmployerSub)
+                Dim lstCnte As BindingList(Of CNTE) = JsonConvert.DeserializeObject(Of BindingList(Of CNTE))(response)
+                dgv1.DataSource = lstCnte
+            End If
             If dgv1.Rows.Count > 0 Then
                 addColumns()
-                dgv1.Columns(0).Visible = False
+                dgv1.Columns(1).Visible = False
             End If
             dgv1.RowsDefaultCellStyle.BackColor = Color.Bisque
             dgv1.AlternatingRowsDefaultCellStyle.BackColor = Color.Beige
@@ -512,7 +546,11 @@ Public Class Frm_Employer
             Dim penalties = calculatePenalties(contribution, cmbYear.SelectedItem, cmbMonth.SelectedItem)
             Dim interes = calculateInteres(contribution, cmbYear.SelectedItem, cmbMonth.SelectedItem)
             If dgv1.Rows.Count > 0 Then
-                Dim dt = DirectCast(dgv1.DataSource, DataTable)
+                'pasar datagrid to datatable
+                ' Dim dt = DirectCast(dgv1.DataSource, DataTable)
+                Dim dt As New DataTable
+                dt = GridtoTable(dt)
+                dgv1.Columns.Clear()
                 Dim R As DataRow
                 If Not isUpdating Then
                     R = dt.NewRow
@@ -597,6 +635,24 @@ Public Class Frm_Employer
                                             MessageBoxDefaultButton.Button1)
         End Try
     End Sub
+    Function GridtoTable(dt As DataTable) As DataTable
+        For Each column As DataGridViewColumn In dgv1.Columns
+            If column.Index < dgv1.Columns.Count - 2 Then
+                dt.Columns.Add(column.HeaderText, column.ValueType)
+            End If
+        Next
+        'Adding the Rows.
+        For Each row As DataGridViewRow In dgv1.Rows
+            dt.Rows.Add()
+            For Each cell As DataGridViewCell In row.Cells
+                If cell.ColumnIndex < dgv1.Columns.Count - 2 Then
+                    dt.Rows(dt.Rows.Count - 1)(cell.ColumnIndex) = cell.Value
+                End If
+
+            Next
+        Next
+        Return dt
+    End Function
     Sub addColumns()
         If Not dgv1.Columns.Contains("update") Then
             Dim btnOForm As New DataGridViewButtonColumn
@@ -738,7 +794,7 @@ Public Class Frm_Employer
             If dateToPay >= New DateTime(2020, 1, 1) AndAlso dateToPay <= New DateTime(2020, 3, 31) Then
                 Return 11
             End If
-            If dateToPay >= New DateTime(2020, 4, 1) AndAlso dateToPay <= New DateTime(2020, 6, 30) Then
+            If dateToPay >= New DateTime(2020, 4, 1) AndAlso dateToPay <= New DateTime(2020, 7, 31) Then
                 Return 9
             End If
             Return Convert.ToDecimal(db.getNISrate)
@@ -747,7 +803,7 @@ Public Class Frm_Employer
             If dateToPay >= New DateTime(2020, 1, 1) AndAlso dateToPay <= New DateTime(2020, 3, 31) Then
                 Return 8.75
             End If
-            If dateToPay >= New DateTime(2020, 4, 1) AndAlso dateToPay <= New DateTime(2020, 6, 30) Then
+            If dateToPay >= New DateTime(2020, 4, 1) AndAlso dateToPay <= New DateTime(2020, 7, 31) Then
                 Return 6.75
             End If
             Return Convert.ToDecimal(db.getVoluntaryRate)
@@ -957,7 +1013,7 @@ Public Class Frm_Employer
             If DateDiff(DateInterval.Year, empe.DateOB, New DateTime(year, month, 1)) = 16 Then
                 For x As Integer = 1 To DateTime.DaysInMonth(year, month)
                     If (New DateTime(year, month, x).DayOfWeek = DayOfWeek.Monday AndAlso New DateTime(year, month, x).Day <= 7) Then
-                        Day = x
+                        day = x
                         Exit For
                     End If
                 Next
@@ -1024,15 +1080,17 @@ Public Class Frm_Employer
             If payDate.DayOfWeek = DayOfWeek.Sunday Then
                 payDate = payDate.AddDays(1)
             End If
+            ' Dim today = New DateTime(Now.Year, Now.Month, 17)
             If Today > payDate Then
                 payDate = Today
             End If
             Dim months As Integer = DateDiff(DateInterval.Month, payDate, period)
-            If months = -1 Then
-                If period.Day >= payDate.Day Then
-                    months += 1
-                End If
+
+            ' If months = -1 Then
+            If period.Day >= payDate.Day Then
+                months += 1
             End If
+            ' End If
             If months <= -1 Then
                 interes = contribution * (0.01 * Math.Abs(months))
             Else
@@ -1240,8 +1298,10 @@ Public Class Frm_Employer
                 Dim week3 As String = row.Cells(15).Value
                 Dim week4 As String = row.Cells(16).Value
                 Dim week5 As String = row.Cells(17).Value
-                db.insertRemittance(employerNo, employerSub, year, month, nisNumber, name, frequence, weekW, earnings, contrib, penalties, interest, week1,
-                                    week2, week3, week4, week5, Date.Now)
+                db.insertRemittanceLite(employerNo, employerSub, year, month, nisNumber, name, frequence, weekW, earnings, contrib, penalties, interest, week1,
+                                   week2, week3, week4, week5, Date.Now.ToString)
+                'db.insertRemittance(employerNo, employerSub, year, month, nisNumber, name, frequence, weekW, earnings, contrib, penalties, interest, week1,
+                '                    week2, week3, week4, week5, Date.Now)
             Next
         Catch ex As Exception
             MessageBox.Show(ex.Message,
@@ -1284,7 +1344,8 @@ Public Class Frm_Employer
     End Sub
     Sub deleteRemittance()
         Try
-            db.deleteRemittance(empr.EmployerNo, empr.EmployerSub)
+            db.deleteRemittanceLite(empr.EmployerNo, empr.EmployerSub)
+            'db.deleteRemittance(empr.EmployerNo, empr.EmployerSub)
         Catch ex As Exception
             MessageBox.Show(ex.Message,
                                             "Error",
@@ -1334,6 +1395,7 @@ Public Class Frm_Employer
 
                 Next
             Next
+
             wSheet.Range(wSheet.Cells(3, 9), wSheet.Cells(100, 9)).NumberFormat = "0.00"
             wSheet.Range(wSheet.Cells(3, 10), wSheet.Cells(100, 10)).NumberFormat = "0.00"
             wSheet.Range(wSheet.Cells(3, 11), wSheet.Cells(100, 11)).NumberFormat = "0.00"
@@ -1546,6 +1608,41 @@ Public Class Frm_Employer
         txtEarningsWeekly.Clear()
         txtearnings.Clear()
     End Sub
+
+    Private Sub IconButton2_Click(sender As Object, e As EventArgs)
+        Dim frm As New Form2
+        frm.Show()
+    End Sub
+#End Region
+
+#Region "Api"
+    Private Async Function GetEmployeeHttp(nisNumber As Integer) As Task(Of String)
+        Dim oRequest As WebRequest = WebRequest.Create("https://localhost:44314/api/EMPE?nisNumber=" & nisNumber)
+        Dim oResponse As WebResponse = oRequest.GetResponse
+        Dim sr As StreamReader = New StreamReader(oResponse.GetResponseStream)
+        Return Await sr.ReadToEndAsync
+    End Function
+
+    Private Async Function GetLastRemitanceHttp(employerNo As Integer, employerSub As Integer) As Task(Of String)
+        Dim oRequest As WebRequest = WebRequest.Create("https://localhost:44314/api/CNTEs?employerNo=" & employerNo & " &employerSub=" & employerSub)
+        Dim oResponse As WebResponse = oRequest.GetResponse
+        Dim sr As StreamReader = New StreamReader(oResponse.GetResponseStream)
+        Return Await sr.ReadToEndAsync
+    End Function
+
+    Private Async Function GetImageHttp(nisNumber As Integer) As Task(Of Image)
+        Dim filname As String
+        'add dash 
+        Dim fnlen As Integer
+        fnlen = nisNumber.ToString.Length
+        filname = Mid(nisNumber, 1, fnlen - 1) + "-" + Mid(nisNumber, fnlen, 1) + ".jpg"
+        Dim oRequest As WebRequest = WebRequest.Create("https://localhost:44314/api/EMPE?fileName=" & filname)
+        Dim oResponse As WebResponse = Await oRequest.GetResponseAsync
+        Dim sr As StreamReader = New StreamReader(oResponse.GetResponseStream)
+        Return Image.FromStream(sr.BaseStream)
+    End Function
+
+
 #End Region
 
 End Class

@@ -1,9 +1,13 @@
 ﻿Imports System.Data.SqlClient
+Imports System.Data.Sql
+Imports System.Data.SQLite
 
 Public Class AccessBD
 
     Dim conString As String = My.Settings.cnString
     Dim conString2 As String = My.Settings.cnString2
+    Dim conSqlite As String = "Data Source=KioskDB.db;Version=3"
+
     Function getEmployerInfo(ByVal employerNo As Integer, ByVal employerSub As Integer) As Employer
         Dim query As String = "SELECT [Id],[EmployerNo],[EmployerSub],[BusinessName],[RealName],[BusinessAddress],[BusinessTown],[BusinesssParish],[RealAddress],[RealTown],[RealParish],
                                         [RealPhone],[BusinessPhone],[Email1],[Email2]
@@ -284,7 +288,7 @@ Public Class AccessBD
     Sub insertRemittance(ByVal employerNo As Integer, ByVal employerSub As Integer, ByVal year As Integer, ByVal month As Integer, ByVal nisNumber As String,
                                       ByVal name As String, ByVal frequence As String, weeksW As Integer, ByVal Earnings As Decimal, ByVal contribution As Decimal,
                                         ByVal penalties As Decimal, ByVal interes As Decimal, ByVal week1 As String, ByVal week2 As String, ByVal week3 As String,
-                                        ByVal week4 As String, ByVal week5 As String, ByVal dateP As Date)
+                                        ByVal week4 As String, ByVal week5 As String, ByVal dateP As DateTime)
         Dim query As String = "INSERT INTO [dbo].[Remittance]([EmployerNo],[EmployerSub],[Year],[Month],[NisNumber],[Name],[Frequence],[WeekW],[Earnings],
                                     [Contribution],[Penalties],[Interest],[Week1],[Week2],[Week3],[Week4],[Week5],[RecordDate])
                                      VALUES
@@ -436,6 +440,111 @@ Public Class AccessBD
             End Using
         End Using
     End Sub
+#End Region
+#Region "SQLite"
+
+    Function getRemittanceLite(ByVal employerNo As Integer, ByVal employerSub As Integer) As DataTable
+        Dim table As New DataTable
+        Dim query As String = "SELECT Id,EmployerNo,EmployerSub,Year,Month,NisNumber,Name,Frequence,WeekW,Earnings,Contribution,Penalties,Interest,
+                                   Week1,Week2,Week3,Week4,Week5 FROM Remittance
+                                    where EmployerNo =@EmployerNo and EmployerSub=@EmployerSub;"
+        Using connection As New SQLiteConnection(conSqlite)
+            Dim command As New SQLiteCommand(query, connection)
+            command.Parameters.AddWithValue("@EmployerNo", SqlDbType.Int).Value = employerNo
+            command.Parameters.AddWithValue("@EmployerSub", SqlDbType.Int).Value = employerSub
+            Try
+                connection.Open()
+                Dim reader As SQLiteDataReader = command.ExecuteReader()
+                table.Load(reader)
+                reader.Close()
+                connection.Close()
+            Catch ex As Exception
+                Throw ex
+            End Try
+        End Using
+        Return table
+    End Function
+    Function getRemittanceByMonthLite(ByVal employerNo As Integer, ByVal employerSub As Integer, ByVal month As Integer, ByVal year As Integer) As DataTable
+        Dim table As New DataTable
+        Dim query As String = "SELECT Id,EmployerNo,EmployerSub,Year,Month,NisNumber,Name,Frequence,WeekW,Earnings,Contribution,Penalties,Interest,
+                                   Week1,Week2,Week3,Week4,Week5,RecordDate FROM Remittance
+                                    where EmployerNo =@EmployerNo and EmployerSub=@EmployerSub 
+                                    and strftime('%m', `RecordDate`)=@Month  AND strftime('%Y', RecordDate) =@Year;"
+        Using connection As New SQLiteConnection(conSqlite)
+            Dim command As New SQLiteCommand(query, connection)
+            command.Parameters.AddWithValue("@EmployerNo", SqlDbType.Int).Value = employerNo
+            command.Parameters.AddWithValue("@EmployerSub", SqlDbType.Int).Value = employerSub
+            command.Parameters.AddWithValue("@Month", SqlDbType.Int).Value = month
+            command.Parameters.AddWithValue("@Year", SqlDbType.Int).Value = year
+            Try
+                connection.Open()
+                Dim reader As SQLiteDataReader = command.ExecuteReader()
+                table.Load(reader)
+                reader.Close()
+                connection.Close()
+            Catch ex As Exception
+                Throw ex
+            End Try
+        End Using
+        Return table
+    End Function
+    Sub insertRemittanceLite(ByVal employerNo As Integer, ByVal employerSub As Integer, ByVal year As Integer, ByVal month As Integer, ByVal nisNumber As String,
+                                     ByVal name As String, ByVal frequence As String, weeksW As Integer, ByVal Earnings As Decimal, ByVal contribution As Decimal,
+                                       ByVal penalties As Decimal, ByVal interes As Decimal, ByVal week1 As String, ByVal week2 As String, ByVal week3 As String,
+                                       ByVal week4 As String, ByVal week5 As String, ByVal dateP As String)
+        Dim query As String = "INSERT INTO Remittance(EmployerNo,EmployerSub,Year,Month,NisNumber,Name,Frequence,WeekW,Earnings,
+                                    Contribution,Penalties,Interest,Week1,Week2,Week3,Week4,Week5,RecordDate)
+                                     VALUES
+                                           (@EmployerNo, @EmployerSub, @Year, @Month, @NisNumber, @Name, @Frequence, @WeekW, @Earnings, @Contribution, @Penalties,
+                                                @Interest, @Week1, @Week2, @Week3, @Week4, @Week5, @RecordDate)"
+        Using connection As New SQLiteConnection(conSqlite)
+            Using command As New SQLiteCommand(query, connection)
+                command.Parameters.AddWithValue("@EmployerNo", employerNo)
+                command.Parameters.AddWithValue("@EmployerSub", employerSub)
+                command.Parameters.AddWithValue("@Year", year)
+                command.Parameters.AddWithValue("@Month", month)
+                command.Parameters.AddWithValue("@NisNumber", nisNumber)
+                command.Parameters.AddWithValue("@Name", name)
+                command.Parameters.AddWithValue("@Frequence", frequence)
+                command.Parameters.AddWithValue("@WeekW", weeksW)
+                command.Parameters.AddWithValue("@Earnings", Earnings)
+                command.Parameters.AddWithValue("@Contribution", contribution)
+                command.Parameters.AddWithValue("@Penalties", penalties)
+                command.Parameters.AddWithValue("@Interest", interes)
+                command.Parameters.AddWithValue("@Week1", week1)
+                command.Parameters.AddWithValue("@Week2", week2)
+                command.Parameters.AddWithValue("@Week3", week3)
+                command.Parameters.AddWithValue("@Week4", week4)
+                command.Parameters.AddWithValue("@Week5", week5)
+                command.Parameters.AddWithValue("@RecordDate", dateP)
+                Try
+                    connection.Open()
+                    command.ExecuteNonQuery()
+                    connection.Close()
+                Catch ex As Exception
+                    Throw ex
+                End Try
+            End Using
+        End Using
+    End Sub
+    Sub deleteRemittanceLite(ByVal employerNo As Integer, ByVal employerSub As Integer)
+        Dim query As String = "DELETE FROM Remittance
+                                WHERE EmployerNo=@EmployerNo and EmployerSub=@EmployerSub"
+        Using connection As New SQLiteConnection(conSqlite)
+            Using command As New SQLiteCommand(query, connection)
+                command.Parameters.AddWithValue("@EmployerNo", employerNo)
+                command.Parameters.AddWithValue("@EmployerSub", employerSub)
+                Try
+                    connection.Open()
+                    command.ExecuteNonQuery()
+                    connection.Close()
+                Catch ex As Exception
+                    Throw ex
+                End Try
+            End Using
+        End Using
+    End Sub
+
 #End Region
 
 End Class
