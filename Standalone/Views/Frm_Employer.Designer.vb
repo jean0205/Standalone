@@ -859,10 +859,9 @@ Partial Class Frm_Employer
         Me.dgv1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.dgv1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv1.GridColor = System.Drawing.SystemColors.ActiveCaptionText
-        Me.dgv1.Location = New System.Drawing.Point(6, 19)
+        Me.dgv1.Location = New System.Drawing.Point(6, 22)
         Me.dgv1.MultiSelect = False
         Me.dgv1.Name = "dgv1"
-        Me.dgv1.ReadOnly = True
         Me.dgv1.RowHeadersVisible = False
         Me.dgv1.RowHeadersWidth = 50
         Me.dgv1.RowTemplate.Height = 35

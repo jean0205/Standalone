@@ -29,16 +29,15 @@ Public Class Form1
             employerNo = Trim(txtnumber.Text)
             Dim response As String = Await GetEmployerHttp(employerNo, employerSub)
 
-            Dim lstEmpr As List(Of Employer) = JsonConvert.DeserializeObject(Of List(Of Employer))(response)
-            Dim empr As New Employer
-
-            If lstEmpr.Count > 0 Then
-                empr = lstEmpr(0)
-                Dim frm As New frm_Confirmation(Name, empr)
+            Dim respuesta As RespuestaEmpr = JsonConvert.DeserializeObject(Of RespuestaEmpr)(response)
+            Dim empr As Employer = respuesta.Data
+            If Not IsNothing(empr) Then
+                'empr = lstEmpr(0)
+                Dim frm As New frm_Confirmation(empr)
                 frm.Show()
                 Me.Visible = False
             Else
-                MessageBox.Show("You must provide a valid Employer Number.",
+                MessageBox.Show("You must provide a valid Employer Number." & respuesta.Message,
                                    "Missing Information",
                                         MessageBoxButtons.OK,
                                            MessageBoxIcon.Exclamation,
@@ -117,7 +116,7 @@ Public Class Form1
 
     'Working with the appi
     Private Async Function GetEmployerHttp(employerNo As Integer, employerSub As Integer) As Task(Of String)
-        Dim oRequest As WebRequest = WebRequest.Create("https://localhost:44314/api/EMPR?employerNo=" & employerNo & " &employerSub=" & employerSub)
+        Dim oRequest As WebRequest = WebRequest.Create("https://localhost:6100/api/Employer/getEmployer/" & employerNo & "-" & employerSub)
         Dim oResponse As WebResponse = oRequest.GetResponse
         Dim sr As StreamReader = New StreamReader(oResponse.GetResponseStream)
         Return Await sr.ReadToEndAsync

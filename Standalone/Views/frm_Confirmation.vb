@@ -2,7 +2,7 @@
     Dim employerNo, employerSub As Integer
     Dim empr As Employer
 
-    Sub New(busName As String, empr As Employer)
+    Sub New(empr As Employer)
         ' This call is required by the designer.
         InitializeComponent()
         Me.lblEmployerName.Text = Trim(empr.BusinessName)

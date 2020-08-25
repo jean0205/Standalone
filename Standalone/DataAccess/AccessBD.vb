@@ -466,7 +466,7 @@ Public Class AccessBD
     End Function
     Function getRemittanceByMonthLite(ByVal employerNo As Integer, ByVal employerSub As Integer, ByVal month As Integer, ByVal year As Integer) As DataTable
         Dim table As New DataTable
-        Dim query As String = "SELECT Id,EmployerNo,EmployerSub,Year,Month,NisNumber,Name,Frequence,WeekW,Earnings,Contribution,Penalties,Interest,
+        Dim query As String = "SELECT Selected,Id,EmployerNo,EmployerSub,Year,Month,NisNumber,Name,Frequence,WeekW,Earnings,Contribution,Penalties,Interest,
                                    Week1,Week2,Week3,Week4,Week5,RecordDate FROM Remittance
                                     where EmployerNo =@EmployerNo and EmployerSub=@EmployerSub 
                                     and strftime('%m', `RecordDate`)=@Month  AND strftime('%Y', RecordDate) =@Year;"

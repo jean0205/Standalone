@@ -6,7 +6,8 @@ Imports System.Xml
 Imports Microsoft.VisualBasic.CompilerServices
 Imports Newtonsoft.Json
 Imports System.ComponentModel
-
+Imports System.Threading
+Imports Formatting = Newtonsoft.Json.Formatting
 
 Public Class Frm_Employer
     Dim db As New AccessBD
@@ -16,6 +17,7 @@ Public Class Frm_Employer
     Dim id As Integer
     Dim oth As New Others
     Dim remittanceSent As Boolean = False
+    Dim isexcecuted = False
 
 
     Sub New(empr As Employer)
@@ -75,11 +77,11 @@ Public Class Frm_Employer
         Dim nisNumber = txtNisNumber.Text
         Try
             Dim response As String = Await GetEmployeeHttp(nisNumber)
-            Dim lstEmpe As List(Of Employee) = JsonConvert.DeserializeObject(Of List(Of Employee))(response)
-            Dim empe As New Employee
+            Dim respuesta As RespuestaEmpe = JsonConvert.DeserializeObject(Of RespuestaEmpe)(response)
+            Dim empe As Employee = respuesta.Data
 
-            If lstEmpe.Count > 0 Then
-                empe = lstEmpe(0)
+            If Not IsNothing(empe) Then
+
                 'empe = db.getEmployeeInfo(nisNumber)
                 Me.empe = empe
                 txtEmployeeName.Text = empe.FirstName + " " + empe.Lastname + " " + empe.MaidenName
@@ -136,7 +138,7 @@ Public Class Frm_Employer
         ClearEmployeePanel()
         txtNisNumber.Focus()
     End Sub
-    Private Sub ibtnAccept_Click(sender As Object, e As EventArgs) Handles ibtnAccept.Click
+    Private Async Sub ibtnAccept_Click(sender As Object, e As EventArgs) Handles ibtnAccept.Click
         If CheckWeeksEarning() Then
             Exit Sub
         End If
@@ -155,13 +157,13 @@ Public Class Frm_Employer
                                             MessageBoxDefaultButton.Button1)
         ElseIf cmbFrequence.SelectedIndex = 1 Then
             Dim monthly As Boolean = True
-            insertEmployeeDgvMonthly(monthly, 0)
+            Await insertEmployeeDgvMonthly(monthly, 0)
             PanelEmployee.Visible = False
             ClearEmployeePanel()
         ElseIf cmbFrequence.SelectedIndex = 2 Then
             Dim monthly As Boolean = False
             Dim week As Integer = getWeeks()
-            insertEmployeeDgvMonthly(monthly, week)
+            Await insertEmployeeDgvMonthly(monthly, week)
             PanelEmployee.Visible = False
             ClearEmployeePanel()
         End If
@@ -194,7 +196,7 @@ Public Class Frm_Employer
                                                MessageBoxDefaultButton.Button1)
         End If
     End Sub
-    Private Sub txtearnings_TextChanged(sender As Object, e As EventArgs) Handles txtearnings.TextChanged
+    Private Async Sub txtearnings_TextChanged(sender As Object, e As EventArgs) Handles txtearnings.TextChanged
         If CheckInformationDate() Then
             txtearnings.Clear()
             Exit Sub
@@ -212,7 +214,7 @@ Public Class Frm_Employer
                         earning = 1160 * getWeeks()
                     End If
                 End If
-                Dim contribution = calculateConstribution(earning, True, 0, cmbYear.SelectedItem, cmbMonth.SelectedItem)
+                Dim contribution = Await calculateConstributionAsync(earning, True, 0, cmbYear.SelectedItem, cmbMonth.SelectedItem)
                 Dim penalties As Decimal = calculatePenalties(contribution, cmbYear.SelectedItem, cmbMonth.SelectedItem)
                 Dim interes As Decimal = calculateInteres(contribution, cmbYear.SelectedItem, cmbMonth.SelectedItem)
                 txtConstribution.Text = contribution
@@ -249,6 +251,7 @@ Public Class Frm_Employer
         If cmbMonth.SelectedIndex <> 0 Then
             clearTXT()
             If cmbYear.SelectedIndex > 0 Then
+
                 Dim monthNumber As Integer = DateTime.ParseExact(cmbMonth.SelectedItem, "MMMM", CultureInfo.InvariantCulture).Month
                 Dim dateM As Date = New DateTime(cmbYear.SelectedItem, monthNumber, 1)
                 MonthCalendar1.SetDate(dateM)
@@ -260,7 +263,6 @@ Public Class Frm_Employer
                     chkweek5.Visible = True
                     txtweek5.Visible = True
                 End If
-
             Else
                 MonthCalendar1.Visible = False
             End If
@@ -385,7 +387,7 @@ Public Class Frm_Employer
                                                MessageBoxDefaultButton.Button1)
         End If
     End Sub
-    Private Sub txtWeek1_TextChanged(sender As Object, e As EventArgs) Handles txtWeek1.TextChanged, txtWeek2.TextChanged, txtWeek3.TextChanged, txtWeek4.TextChanged, txtweek5.TextChanged
+    Private Async Sub txtWeek1_TextChanged(sender As Object, e As EventArgs) Handles txtWeek1.TextChanged, txtWeek2.TextChanged, txtWeek3.TextChanged, txtWeek4.TextChanged, txtweek5.TextChanged
         Dim earning As Decimal
         Dim weekEarn As Decimal
         For Each txt As TextBox In gbWeeks.Controls.OfType(Of TextBox)
@@ -399,7 +401,7 @@ Public Class Frm_Employer
         Next
         Dim count As Integer = getWeeks()
         If txtWeek1.Text.Length > 0 Or txtWeek2.Text.Length > 0 Or txtWeek3.Text.Length > 0 Or txtWeek4.Text.Length > 0 Or txtweek5.Text.Length > 0 Then
-            Dim contribution = calculateConstribution(earning, False, count, cmbYear.SelectedItem, cmbMonth.SelectedItem)
+            Dim contribution = Await calculateConstributionAsync(earning, False, count, cmbYear.SelectedItem, cmbMonth.SelectedItem)
             Dim penalties As Decimal = calculatePenalties(contribution, cmbYear.SelectedItem, cmbMonth.SelectedItem)
             Dim interes As Decimal = calculateInteres(contribution, cmbYear.SelectedItem, cmbMonth.SelectedItem)
             txtEarningsWeekly.Text = earning
@@ -434,16 +436,16 @@ Public Class Frm_Employer
         Dim senderGrid = DirectCast(sender, DataGridView)
         'buttom update
         If TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewButtonColumn AndAlso
-           e.RowIndex >= 0 AndAlso e.ColumnIndex = 18 Then
+           e.RowIndex >= 0 AndAlso e.ColumnIndex = 19 Then
             ibtnAddEmployee.PerformClick()
-            txtNisNumber.Text = dgv1.Rows(e.RowIndex).Cells(5).Value
+            txtNisNumber.Text = dgv1.Rows(e.RowIndex).Cells(6).Value
             txtNisNumber.ReadOnly = True
             ibtnCheck.PerformClick()
             isUpdating = True
             id = e.RowIndex
         End If
         If TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewButtonColumn AndAlso
-          e.RowIndex >= 0 AndAlso e.ColumnIndex = 19 Then
+          e.RowIndex >= 0 AndAlso e.ColumnIndex = 20 Then
             dgv1.Rows.RemoveAt(e.RowIndex)
             deleteRemittance()
             InsertRemittance()
@@ -452,7 +454,24 @@ Public Class Frm_Employer
                 dgv1.Columns.Clear()
             End If
         End If
+        'If TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewCheckBoxColumn AndAlso
+        '  e.RowIndex >= 0 AndAlso e.ColumnIndex = 0 Then
+        '    If dgv1.Rows(e.RowIndex).Cells(0).Value Then
+        '        dgv1.Rows(e.RowIndex).Cells(0).Value = False
+        '    Else
+        '        dgv1.Rows(e.RowIndex).Cells(0).Value = True
+        '    End If
+        'End If
     End Sub
+    'Private Sub dgv1_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgv1.CellMouseUp
+    '    Dim senderGrid = DirectCast(sender, DataGridView)
+    '    If TypeOf senderGrid.Columns(e.ColumnIndex) Is DataGridViewCheckBoxColumn AndAlso
+    '     e.RowIndex >= 0 AndAlso e.ColumnIndex = 0 Then
+    '        Dim value As Boolean = dgv1.Rows(e.RowIndex).Cells(0).Value
+    '        PaintDatagrid(dgv1)
+    '        'dgv1.Refresh()
+    '    End If
+    'End Sub
 
 
 
@@ -462,17 +481,12 @@ Public Class Frm_Employer
     Async Sub loadRemittance()
         Try
             dgv1.Columns.Clear()
-            Dim checkColumn As New DataGridViewCheckBoxColumn
-            checkColumn.HeaderText = "Select"
-            checkColumn.Name = "select"
-            checkColumn.ReadOnly = False
-            dgv1.Columns.Add(checkColumn)
-
             'dgv1.DataSource = db.getRemittance(empr.EmployerNo, empr.EmployerSub)
-            'dgv1.DataSource = db.getRemittanceLite(empr.EmployerNo, empr.EmployerSub)
+            dgv1.DataSource = db.getRemittanceLite(empr.EmployerNo, empr.EmployerSub)
             If dgv1.Rows.Count = 0 Then
                 Dim response As String = Await GetLastRemitanceHttp(empr.EmployerNo, empr.EmployerSub)
-                Dim lstCnte As BindingList(Of CNTE) = JsonConvert.DeserializeObject(Of BindingList(Of CNTE))(response)
+                Dim respLst As RespuestaCnte = JsonConvert.DeserializeObject(Of RespuestaCnte)(response)
+                Dim lstCnte As New BindingList(Of CNTE)(respLst.Data)
                 dgv1.DataSource = lstCnte
             End If
             If dgv1.Rows.Count > 0 Then
@@ -481,6 +495,11 @@ Public Class Frm_Employer
             End If
             dgv1.RowsDefaultCellStyle.BackColor = Color.Bisque
             dgv1.AlternatingRowsDefaultCellStyle.BackColor = Color.Beige
+
+            For Each row As DataGridViewRow In dgv1.Rows
+                row.Cells(0).Value = True
+            Next
+            'PaintDatagrid(dgv1)
         Catch ex As Exception
             MessageBox.Show(ex.Message,
                                "Error loading remittance",
@@ -489,6 +508,22 @@ Public Class Frm_Employer
                                            MessageBoxDefaultButton.Button1)
         End Try
 
+    End Sub
+
+    Sub PaintDatagrid(dgv1 As DataGridView)
+        Dim x As Integer = 0
+        For Each row As DataGridViewRow In dgv1.Rows
+            x += 1
+            If (x Mod 2) <> 0 Then
+                row.DefaultCellStyle.BackColor = Color.Beige
+            End If
+            If (x Mod 2) = 0 Then
+                row.DefaultCellStyle.BackColor = Color.Bisque
+            End If
+            If row.Cells(0).Value = False Then
+                row.DefaultCellStyle.BackColor = Color.Gray
+            End If
+        Next
     End Sub
     Sub ClearEmployeePanel()
         Dim weeks As Integer = 0
@@ -520,7 +555,8 @@ Public Class Frm_Employer
         Return Enumerable.Range(1, DateTime.DaysInMonth(year, month)).
         Count(Function(d) (New DateTime(year, month, d)).DayOfWeek = DayOfWeek.Monday)
     End Function
-    Sub insertEmployeeDgvMonthly(monthly As Boolean, weeks As Integer)
+
+    Async Function insertEmployeeDgvMonthly(monthly As Boolean, weeks As Integer) As Task
         If String.IsNullOrEmpty(txtearnings.Text) AndAlso monthly Then
             MessageBox.Show("You must enter the Insurable Earnings",
                                 "Missing Information",
@@ -528,7 +564,7 @@ Public Class Frm_Employer
                                         MessageBoxIcon.Exclamation,
                                             MessageBoxDefaultButton.Button1)
 
-            Exit Sub
+            Exit Function
         End If
         Try
             Dim earning As Decimal
@@ -542,9 +578,12 @@ Public Class Frm_Employer
             Else
                 earning = Convert.ToDecimal(txtEarningsWeekly.Text)
             End If
-            Dim contribution = calculateConstribution(earning, monthly, weeks, cmbYear.SelectedItem, cmbMonth.SelectedItem)
-            Dim penalties = calculatePenalties(contribution, cmbYear.SelectedItem, cmbMonth.SelectedItem)
-            Dim interes = calculateInteres(contribution, cmbYear.SelectedItem, cmbMonth.SelectedItem)
+            Dim month As String = cmbMonth.SelectedItem
+            Dim frequence As String = cmbFrequence.SelectedItem
+            Dim year As String = cmbYear.SelectedItem
+            Dim contribution As Decimal = Await calculateConstributionAsync(earning, monthly, weeks, cmbYear.SelectedItem, month)
+            Dim penalties = calculatePenalties(contribution, year, month)
+            Dim interes = calculateInteres(contribution, year, month)
             If dgv1.Rows.Count > 0 Then
                 'pasar datagrid to datatable
                 ' Dim dt = DirectCast(dgv1.DataSource, DataTable)
@@ -559,11 +598,11 @@ Public Class Frm_Employer
                 End If
                 R(1) = empr.EmployerNo
                 R(2) = empr.EmployerSub
-                R(3) = cmbYear.SelectedItem
+                R(3) = year
                 R(4) = monthNumber
                 R(5) = empe.NisNumber
                 R(6) = fullName
-                R(7) = cmbFrequence.SelectedItem
+                R(7) = frequence
                 R(8) = getWeeks()
                 R(9) = earning
                 R(10) = contribution
@@ -582,7 +621,6 @@ Public Class Frm_Employer
                 isUpdating = False
                 deleteRemittance()
                 InsertRemittance()
-
             Else
                 Dim dt As New DataTable
                 Dim R As DataRow = dt.NewRow
@@ -606,27 +644,28 @@ Public Class Frm_Employer
                 dt.Columns.Add("Week5")
                 R(1) = empr.EmployerNo
                 R(2) = empr.EmployerSub
-                R(3) = cmbYear.SelectedItem
+                R(3) = year
                 R(4) = monthNumber
                 R(5) = empe.NisNumber
                 R(6) = fullName
-                R(7) = cmbFrequence.SelectedItem
+                R(7) = frequence
                 R(8) = getWeeks()
                 R(9) = earning
                 R(10) = contribution
-                R(11) = penalties
+                R(11) = Format(penalties)
                 R(12) = interes
                 addWeeksX(R, monthly)
                 dt.Rows.Add(R)
                 dgv1.DataSource = dt
-                getTotalGeneral()
                 dgv1.Columns(0).Visible = False
                 isUpdating = False
                 addColumns()
+                getTotalGeneral()
                 InsertRemittance()
             End If
             remittanceSent = False
             checkEveryRow()
+            ' PaintDatagrid(dgv1)
         Catch ex As Exception
             MessageBox.Show(ex.Message + "Error creating the datagriedview",
                                 "Missing Information",
@@ -634,10 +673,15 @@ Public Class Frm_Employer
                                         MessageBoxIcon.Exclamation,
                                             MessageBoxDefaultButton.Button1)
         End Try
-    End Sub
+    End Function
     Function GridtoTable(dt As DataTable) As DataTable
+        'For Each column As DataGridViewColumn In dgv1.Columns
+        '    If column.Index < dgv1.Columns.Count - 2 AndAlso column.Index <> 0 Then
+        '        dt.Columns.Add(column.HeaderText, column.ValueType)
+        '    End If
+        'Next
         For Each column As DataGridViewColumn In dgv1.Columns
-            If column.Index < dgv1.Columns.Count - 2 Then
+            If column.Index < dgv1.Columns.Count - 2 AndAlso column.Index <> 0 Then
                 dt.Columns.Add(column.HeaderText, column.ValueType)
             End If
         Next
@@ -645,8 +689,8 @@ Public Class Frm_Employer
         For Each row As DataGridViewRow In dgv1.Rows
             dt.Rows.Add()
             For Each cell As DataGridViewCell In row.Cells
-                If cell.ColumnIndex < dgv1.Columns.Count - 2 Then
-                    dt.Rows(dt.Rows.Count - 1)(cell.ColumnIndex) = cell.Value
+                If cell.ColumnIndex < dgv1.Columns.Count - 2 AndAlso cell.ColumnIndex <> 0 Then
+                    dt.Rows(dt.Rows.Count - 1)(cell.ColumnIndex - 1) = cell.Value
                 End If
 
             Next
@@ -670,8 +714,24 @@ Public Class Frm_Employer
             btnOForm.UseColumnTextForButtonValue = True
             dgv1.Columns.Add(btnOForm)
         End If
+        If Not dgv1.Columns.Contains("Select") Then
+            Dim checkColumn As New DataGridViewCheckBoxColumn
+            checkColumn.HeaderText = "Select"
+            checkColumn.Name = "select"
+            checkColumn.ReadOnly = False
+            dgv1.Columns.Insert(0, checkColumn)
+        End If
+        For Each col As DataGridViewColumn In dgv1.Columns
+            If col.Index <> 0 Then
+                col.ReadOnly = True
+            End If
+        Next
+        For Each row As DataGridViewRow In dgv1.Rows
+            row.Cells(0).Value = True
+        Next
     End Sub
     Sub addWeeksX(R As DataRow, monthly As Boolean)
+
         If (monthly) Then
             If chkweek1.Checked Then
                 R(13) = "X"
@@ -783,6 +843,30 @@ Public Class Frm_Employer
         End If
         Return False
     End Function
+
+    Async Function getNisRateApiAsync(year As Integer, month As Integer) As Task(Of Decimal)
+        Dim dateToPay As DateTime
+        'Dim monthNumber As Integer = DateTime.ParseExact(month, "MMMM", CultureInfo.InvariantCulture).Month
+        dateToPay = New DateTime(year, month, 1)
+        Dim response As String = Await GetRatesHttp(year & "-" & month & "-" & 1)
+        Dim respuesta As RespuestaRates = JsonConvert.DeserializeObject(Of RespuestaRates)(response)
+        Dim rateList As List(Of Rate) = respuesta.Data
+        If Not chkVoluntary.Checked Then
+            Dim rate As Rate = rateList.Where(Function(x) x.Description = "Nis").FirstOrDefault
+            Return Await Task.FromResult(rate.Value)
+
+            'Dim value As String = CType(rateList.Where(Function(x) x.Description = "Nis"), Rate).Value
+
+            ' Return CType(rateList.Where(Function(x) x.Description = "Nis"), Rate).Value
+        End If
+        If chkVoluntary.Checked Then
+            Dim rate As Rate = rateList.Where(Function(x) x.Description = "Voluntary").FirstOrDefault
+            Return Await Task.FromResult(rate.Value)
+        End If
+        Return 0.00
+    End Function
+
+
     Function getNisRate(year As Integer, month As Integer) As Decimal
         Dim dateToPay As Date
         'Dim monthNumber As Integer = DateTime.ParseExact(month, "MMMM", CultureInfo.InvariantCulture).Month
@@ -810,7 +894,9 @@ Public Class Frm_Employer
         End If
         Return 0.00
     End Function
-    Function calculateConstribution(earning As Decimal, monthly As Boolean, weeks As Integer, year As Integer, monthname As String) As Decimal
+
+
+    Async Function calculateConstributionAsync(earning As Decimal, monthly As Boolean, weeks As Integer, year As Integer, monthname As String) As Task(Of Decimal)
         If CheckInformationDate() Then
             Exit Function
         End If
@@ -846,12 +932,14 @@ Public Class Frm_Employer
                     Return constribWith16(earning, year, month, False)
                 End If
             End If
-            Dim nisrate = If((CalcularEdad(empe.DateOB, year, month) > 15 And CalcularEdad(empe.DateOB, year, month) < 60), getNisRate(year, month), 1)
-            'Dim nisrate = getNisRate(year, month)
+            Dim rate As Decimal = Await getNisRateApiAsync(year, month)
+            Dim nisrate = If((CalcularEdad(empe.DateOB, year, month) > 15 And CalcularEdad(empe.DateOB, year, month) < 60), rate, 1)
             contribution = earning * (nisrate / 100)
+            isexcecuted = True
             Return Math.Round(contribution, 2)
         Catch ex As Exception
             MessageBox.Show(ex.Message)
+            isexcecuted = False
         End Try
 #Disable Warning BC42353 ' Function doesn't return a value on all code paths
     End Function
@@ -1155,56 +1243,99 @@ Public Class Frm_Employer
                                               MessageBoxDefaultButton.Button1)
                 Exit Sub
             End If
-            Timer1.Start()
-            CircularProgressBar1.Visible = True
-            CircularProgressBar1.Value = 0
-            CircularProgressBar1.Minimum = 0
-            CircularProgressBar1.Maximum = 90
-            makeFolder()
-            CircularProgressBar1.Value += 10
-            Dim files() As String = IO.Directory.GetFiles("C:\TempRemittance\", "*.*")
-            If files.Length > 0 Then
-                FileSystem.Kill("C:\TempRemittance\*.*")
-            End If
-            deleteRemittance()
-            CircularProgressBar1.Value += 10
-            InsertRemittance()
-            InsertRemittanceSent()
-            CircularProgressBar1.Value += 10
-            loadRemittance()
-            CircularProgressBar1.Value += 10
-            Await Task.Run(Sub()
-                               ExportRemittanceToexcel()
-                           End Sub)
-            CircularProgressBar1.Value += 10
-            For Each email As String In getEmailsToRemittance()
-                oth.sendEmailUsingOutlook("Kiosk Electronic Remittance", bodyRemittance, email)
+            Dim remittanceList As New List(Of Remittance)
+            For Each row As DataGridViewRow In dgv1.Rows
+                If row.Cells(0).Value Then
+                    Dim remittance As New Remittance
+                    remittance.EmployerNo = row.Cells(2).Value
+                    remittance.EmployerSub = row.Cells(3).Value
+                    remittance.Year = row.Cells(4).Value
+                    remittance.Month = row.Cells(5).Value
+                    remittance.NISNumber = row.Cells(6).Value
+                    remittance.Name = row.Cells(7).Value
+                    remittance.Frequence = row.Cells(8).Value
+                    remittance.WeekW = row.Cells(9).Value
+                    remittance.Earnings = row.Cells(10).Value
+                    remittance.Contribution = row.Cells(11).Value
+                    remittance.Penalties = row.Cells(12).Value
+                    remittance.Interest = row.Cells(13).Value
+                    remittance.Week1 = row.Cells(14).Value
+                    remittance.Week2 = row.Cells(15).Value
+                    remittance.Week3 = row.Cells(16).Value
+                    remittance.Week4 = row.Cells(17).Value
+                    remittance.Week5 = row.Cells(18).Value
+                    remittance.RecordDate = Date.Now
+                    remittanceList.Add(remittance)
+                End If
             Next
-            Dim files2() As String = IO.Directory.GetFiles("C:\TempRemittance\", "*.*")
-            If files2.Length > 0 Then
-                FileSystem.Kill("C:\TempRemittance\*.*")
-            End If
-            CircularProgressBar1.Value += 10
-            Await Task.Run(Sub()
-                               getTotalForPeriodos()
-                           End Sub)
-            CircularProgressBar1.Value += 10
-            For Each email As String In getEmailsToTotals()
-                oth.sendEmailUsingOutlook("Kiosk Totals", bodyTotals, email)
-            Next
-            Dim files3() As String = IO.Directory.GetFiles("C:\TempRemittance\", "*.*")
-            If files3.Length > 0 Then
-                FileSystem.Kill("C:\TempRemittance\*.*")
-            End If
-            CircularProgressBar1.Value += 10
-            remittanceSent = True
-            CircularProgressBar1.Value += 10
-            CircularProgressBar1.Visible = False
-            MessageBox.Show("Your Electronic Remittance was successfully submitted to NIS.",
-                                 "Remittance submitted",
+            Dim response As String = Await PostRemittance(remittanceList)
+            Dim respuesta As Respuesta = JsonConvert.DeserializeObject(Of Respuesta)(response)
+            If respuesta.Successfull = 1 Then
+                MessageBox.Show("Remittance Form successfully sent",
+                                  "Successfull",
+                                       MessageBoxButtons.OK,
+                                          MessageBoxIcon.Information,
+                                              MessageBoxDefaultButton.Button1)
+                deleteRemittance()
+                InsertRemittance()
+            Else
+                MessageBox.Show(respuesta.Message & " Error sending the remittance form",
+                                 "Error",
                                       MessageBoxButtons.OK,
                                          MessageBoxIcon.Information,
                                              MessageBoxDefaultButton.Button1)
+            End If
+
+            'Timer1.Start()
+            'CircularProgressBar1.Visible = True
+            'CircularProgressBar1.Value = 0
+            'CircularProgressBar1.Minimum = 0
+            'CircularProgressBar1.Maximum = 90
+            'makeFolder()
+            'CircularProgressBar1.Value += 10
+            'Dim files() As String = IO.Directory.GetFiles("C:\TempRemittance\", "*.*")
+            'If files.Length > 0 Then
+            '    FileSystem.Kill("C:\TempRemittance\*.*")
+            'End If
+            'deleteRemittance()
+            'CircularProgressBar1.Value += 10
+            'InsertRemittance()
+            'InsertRemittanceSent()
+            'CircularProgressBar1.Value += 10
+            'loadRemittance()
+            'CircularProgressBar1.Value += 10
+            'Await Task.Run(Sub()
+            '                   ExportRemittanceToexcel()
+            '               End Sub)
+            'CircularProgressBar1.Value += 10
+            'For Each email As String In getEmailsToRemittance()
+            '    oth.sendEmailUsingOutlook("Kiosk Electronic Remittance", bodyRemittance, email)
+            'Next
+            'Dim files2() As String = IO.Directory.GetFiles("C:\TempRemittance\", "*.*")
+            'If files2.Length > 0 Then
+            '    FileSystem.Kill("C:\TempRemittance\*.*")
+            'End If
+            'CircularProgressBar1.Value += 10
+            'Await Task.Run(Sub()
+            '                   getTotalForPeriodos()
+            '               End Sub)
+            'CircularProgressBar1.Value += 10
+            'For Each email As String In getEmailsToTotals()
+            '    oth.sendEmailUsingOutlook("Kiosk Totals", bodyTotals, email)
+            'Next
+            'Dim files3() As String = IO.Directory.GetFiles("C:\TempRemittance\", "*.*")
+            'If files3.Length > 0 Then
+            '    FileSystem.Kill("C:\TempRemittance\*.*")
+            'End If
+            'CircularProgressBar1.Value += 10
+            'remittanceSent = True
+            'CircularProgressBar1.Value += 10
+            'CircularProgressBar1.Visible = False
+            'MessageBox.Show("Your Electronic Remittance was successfully submitted to NIS.",
+            '                     "Remittance submitted",
+            '                          MessageBoxButtons.OK,
+            '                             MessageBoxIcon.Information,
+            '                                 MessageBoxDefaultButton.Button1)
 
         Catch ex As Exception
             MessageBox.Show(ex.Message & " Error deleting files",
@@ -1262,7 +1393,7 @@ Public Class Frm_Employer
     Function checkEveryRow() As Boolean
         Dim missingInfo As Boolean = False
         For Each row As DataGridViewRow In dgv1.Rows
-            If String.IsNullOrEmpty(row.Cells(7).Value) Then
+            If String.IsNullOrEmpty(row.Cells(8).Value) Then
                 row.DefaultCellStyle.ForeColor = Color.Red
                 missingInfo = True
             Else
@@ -1281,27 +1412,25 @@ Public Class Frm_Employer
     Sub InsertRemittance()
         Try
             For Each row As DataGridViewRow In dgv1.Rows
-                Dim employerNo As Integer = row.Cells(1).Value
-                Dim employerSub As Integer = row.Cells(2).Value
-                Dim year As Integer = row.Cells(3).Value
-                Dim month As Integer = row.Cells(4).Value
-                Dim nisNumber As Integer = row.Cells(5).Value
-                Dim name As String = row.Cells(6).Value
-                Dim frequence As String = row.Cells(7).Value
-                Dim weekW As Integer = row.Cells(8).Value
-                Dim earnings As Decimal = row.Cells(9).Value
-                Dim contrib As Decimal = row.Cells(10).Value
-                Dim penalties As Decimal = row.Cells(11).Value
-                Dim interest As Decimal = row.Cells(12).Value
-                Dim week1 As String = row.Cells(13).Value
-                Dim week2 As String = row.Cells(14).Value
-                Dim week3 As String = row.Cells(15).Value
-                Dim week4 As String = row.Cells(16).Value
-                Dim week5 As String = row.Cells(17).Value
+                Dim employerNo As Integer = row.Cells(2).Value
+                Dim employerSub As Integer = row.Cells(3).Value
+                Dim year As Integer = row.Cells(4).Value
+                Dim month As Integer = row.Cells(5).Value
+                Dim nisNumber As Integer = row.Cells(6).Value
+                Dim name As String = row.Cells(7).Value
+                Dim frequence As String = row.Cells(8).Value
+                Dim weekW As Integer = row.Cells(9).Value
+                Dim earnings As Decimal = row.Cells(10).Value
+                Dim contrib As Decimal = row.Cells(11).Value
+                Dim penalties As Decimal = row.Cells(12).Value
+                Dim interest As Decimal = row.Cells(13).Value
+                Dim week1 As String = row.Cells(14).Value
+                Dim week2 As String = row.Cells(15).Value
+                Dim week3 As String = row.Cells(16).Value
+                Dim week4 As String = row.Cells(17).Value
+                Dim week5 As String = row.Cells(18).Value
                 db.insertRemittanceLite(employerNo, employerSub, year, month, nisNumber, name, frequence, weekW, earnings, contrib, penalties, interest, week1,
                                    week2, week3, week4, week5, Date.Now.ToString)
-                'db.insertRemittance(employerNo, employerSub, year, month, nisNumber, name, frequence, weekW, earnings, contrib, penalties, interest, week1,
-                '                    week2, week3, week4, week5, Date.Now)
             Next
         Catch ex As Exception
             MessageBox.Show(ex.Message,
@@ -1314,23 +1443,23 @@ Public Class Frm_Employer
     Sub InsertRemittanceSent()
         Try
             For Each row As DataGridViewRow In dgv1.Rows
-                Dim employerNo As Integer = row.Cells(1).Value
-                Dim employerSub As Integer = row.Cells(2).Value
-                Dim year As Integer = row.Cells(3).Value
-                Dim month As Integer = row.Cells(4).Value
-                Dim nisNumber As Integer = row.Cells(5).Value
-                Dim name As String = row.Cells(6).Value
-                Dim frequence As String = row.Cells(7).Value
-                Dim weekW As Integer = row.Cells(8).Value
-                Dim earnings As Decimal = row.Cells(9).Value
-                Dim contrib As Decimal = row.Cells(10).Value
-                Dim penalties As Decimal = row.Cells(11).Value
-                Dim interest As Decimal = row.Cells(12).Value
-                Dim week1 As String = row.Cells(13).Value
-                Dim week2 As String = row.Cells(14).Value
-                Dim week3 As String = row.Cells(15).Value
-                Dim week4 As String = row.Cells(16).Value
-                Dim week5 As String = row.Cells(17).Value
+                Dim employerNo As Integer = row.Cells(2).Value
+                Dim employerSub As Integer = row.Cells(3).Value
+                Dim year As Integer = row.Cells(4).Value
+                Dim month As Integer = row.Cells(5).Value
+                Dim nisNumber As Integer = row.Cells(6).Value
+                Dim name As String = row.Cells(7).Value
+                Dim frequence As String = row.Cells(8).Value
+                Dim weekW As Integer = row.Cells(9).Value
+                Dim earnings As Decimal = row.Cells(10).Value
+                Dim contrib As Decimal = row.Cells(11).Value
+                Dim penalties As Decimal = row.Cells(12).Value
+                Dim interest As Decimal = row.Cells(13).Value
+                Dim week1 As String = row.Cells(14).Value
+                Dim week2 As String = row.Cells(15).Value
+                Dim week3 As String = row.Cells(16).Value
+                Dim week4 As String = row.Cells(17).Value
+                Dim week5 As String = row.Cells(18).Value
                 db.insertRemittanceSent(employerNo, employerSub, year, month, nisNumber, name, frequence, weekW, earnings, contrib, penalties, interest, week1,
                                     week2, week3, week4, week5, Date.Now)
             Next
@@ -1345,7 +1474,6 @@ Public Class Frm_Employer
     Sub deleteRemittance()
         Try
             db.deleteRemittanceLite(empr.EmployerNo, empr.EmployerSub)
-            'db.deleteRemittance(empr.EmployerNo, empr.EmployerSub)
         Catch ex As Exception
             MessageBox.Show(ex.Message,
                                             "Error",
@@ -1617,30 +1745,53 @@ Public Class Frm_Employer
 
 #Region "Api"
     Private Async Function GetEmployeeHttp(nisNumber As Integer) As Task(Of String)
-        Dim oRequest As WebRequest = WebRequest.Create("https://localhost:44314/api/EMPE?nisNumber=" & nisNumber)
+        Dim oRequest As WebRequest = WebRequest.Create("https://localhost:6100/api/Employee/getEmployee/" & nisNumber)
         Dim oResponse As WebResponse = oRequest.GetResponse
         Dim sr As StreamReader = New StreamReader(oResponse.GetResponseStream)
         Return Await sr.ReadToEndAsync
     End Function
-
     Private Async Function GetLastRemitanceHttp(employerNo As Integer, employerSub As Integer) As Task(Of String)
-        Dim oRequest As WebRequest = WebRequest.Create("https://localhost:44314/api/CNTEs?employerNo=" & employerNo & " &employerSub=" & employerSub)
+        Dim oRequest As WebRequest = WebRequest.Create("https://localhost:6100/api/Contribution/getContribution/" & employerNo & "-" & employerSub)
+        Dim oResponse As WebResponse = oRequest.GetResponse
+        Dim sr As StreamReader = New StreamReader(oResponse.GetResponseStream)
+        Return Await sr.ReadToEndAsync
+    End Function
+    Private Async Function GetImageHttp(nisNumber As Integer) As Task(Of Image)
+        Try
+            Dim filname As String
+            'add dash 
+            Dim fnlen As Integer
+            fnlen = nisNumber.ToString.Length
+            filname = Mid(nisNumber, 1, fnlen - 1) + "-" + Mid(nisNumber, fnlen, 1) + ".jpg"
+            Dim oRequest As WebRequest = WebRequest.Create("https://localhost:6100/api/Employee/getPhoto/" & filname)
+            Dim oResponse As WebResponse = Await oRequest.GetResponseAsync
+            Dim sr As StreamReader = New StreamReader(oResponse.GetResponseStream)
+            Return Image.FromStream(sr.BaseStream)
+        Catch ex As Exception
+        End Try
+    End Function
+    Async Function GetRatesHttp(dateToPay As String) As Task(Of String)
+        Dim oRequest As WebRequest = WebRequest.Create("https://localhost:6100/api/Rate/getRates/" & dateToPay)
         Dim oResponse As WebResponse = oRequest.GetResponse
         Dim sr As StreamReader = New StreamReader(oResponse.GetResponseStream)
         Return Await sr.ReadToEndAsync
     End Function
 
-    Private Async Function GetImageHttp(nisNumber As Integer) As Task(Of Image)
-        Dim filname As String
-        'add dash 
-        Dim fnlen As Integer
-        fnlen = nisNumber.ToString.Length
-        filname = Mid(nisNumber, 1, fnlen - 1) + "-" + Mid(nisNumber, fnlen, 1) + ".jpg"
-        Dim oRequest As WebRequest = WebRequest.Create("https://localhost:44314/api/EMPE?fileName=" & filname)
-        Dim oResponse As WebResponse = Await oRequest.GetResponseAsync
+    Async Function PostRemittance(remittance As List(Of Remittance)) As Task(Of String)
+        Dim oRequest As WebRequest = WebRequest.Create("https://localhost:6100/api/Remittance")
+        oRequest.Method = "post"
+        oRequest.ContentType = "application/json;charset=UTF-8"
+        Using oSW = New StreamWriter(oRequest.GetRequestStream)
+            Dim json As String = JsonConvert.SerializeObject(remittance, Formatting.Indented)
+            oSW.Write(json)
+            oSW.Flush()
+            oSW.Close()
+        End Using
+        Dim oResponse As WebResponse = oRequest.GetResponse
         Dim sr As StreamReader = New StreamReader(oResponse.GetResponseStream)
-        Return Image.FromStream(sr.BaseStream)
+        Return Await sr.ReadToEndAsync
     End Function
+
 
 
 #End Region
